@@ -1,0 +1,926 @@
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    background:#08090c;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+button{
+    font:inherit;
+    cursor:pointer;
+}
+
+#app{
+    min-height:100vh;
+}
+
+/* ===== HOME ===== */
+
+.home{
+    min-height:100vh;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 45%,#242830 0%,#111419 42%,#07080a 100%);
+}
+
+/* soft arena glow */
+
+.home:before{
+    content:"";
+    position:absolute;
+    width:420px;
+    height:420px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle,
+        rgba(255,255,255,.045),
+        rgba(255,255,255,0) 68%);
+}
+
+/* BRAND */
+
+.logo{
+    position:absolute;
+    z-index:5;
+    top:38px;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    text-align:center;
+}
+
+.logo strong{
+    display:block;
+    font-size:38px;
+    line-height:1;
+    font-weight:1000;
+    letter-spacing:3px;
+}
+
+.logo span{
+    display:block;
+    margin-top:9px;
+    color:#777e89;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+/* CENTRAL STATUS */
+
+.home-status{
+    position:absolute;
+    z-index:4;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:155px;
+    height:155px;
+    border-radius:50%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:radial-gradient(circle,#252a31,#111318 72%);
+    border:1px solid rgba(255,255,255,.07);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.home-status-title{
+    font-size:14px;
+    font-weight:1000;
+    letter-spacing:1px;
+}
+
+.home-status-text{
+    margin-top:7px;
+    color:#707782;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+/* PLAYER CORNER BUTTONS */
+
+.home-players{
+    position:absolute;
+    inset:0;
+    z-index:6;
+}
+
+.corner-player{
+    position:absolute;
+    width:116px;
+    height:116px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:32px;
+    color:#fff;
+    background:
+        linear-gradient(145deg,#24282f,#111318);
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.07);
+    font-size:12px;
+    font-weight:1000;
+    letter-spacing:1px;
+    transition:.15s;
+}
+
+.corner-player:active{
+    transform:scale(.92);
+}
+
+.player-1{
+    left:14px;
+    top:120px;
+    border-radius:32px 32px 32px 12px;
+}
+
+.player-2{
+    right:14px;
+    top:120px;
+    border-radius:32px 32px 12px 32px;
+}
+
+.player-3{
+    left:14px;
+    bottom:70px;
+    border-radius:12px 32px 32px 32px;
+}
+
+.player-4{
+    right:14px;
+    bottom:70px;
+    border-radius:32px 12px 32px 32px;
+}
+
+/* RED REACTION LIGHTS */
+
+.reaction-light{
+    position:absolute;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:#350b0b;
+    box-shadow:none;
+    transition:.12s;
+}
+
+.reaction-light.on{
+    background:#ff2020;
+    box-shadow:
+        0 0 8px #ff2020,
+        0 0 22px rgba(255,32,32,.8),
+        0 0 45px rgba(255,32,32,.45);
+}
+
+.light-1{
+    left:118px;
+    top:104px;
+}
+
+.light-2{
+    right:118px;
+    top:104px;
+}
+
+.light-3{
+    left:118px;
+    bottom:54px;
+}
+
+.light-4{
+    right:118px;
+    bottom:54px;
+}
+
+/* READY / GO */
+
+.home-reaction-message{
+    position:absolute;
+    z-index:8;
+    left:50%;
+    bottom:19px;
+    transform:translateX(-50%);
+    color:#5f6671;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:2px;
+    white-space:nowrap;
+}
+
+/* pressed player */
+
+.corner-player.pressed{
+    background:linear-gradient(145deg,#30353d,#171a1f);
+    transform:scale(.94);
+}
+
+/* winner */
+
+.corner-player.winner{
+    background:linear-gradient(145deg,#17652f,#092714)!important;
+    color:#39ed7a;
+    box-shadow:
+        0 0 35px rgba(50,232,117,.25),
+        inset 0 1px 0 rgba(150,255,180,.12);
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .logo{
+        top:27px;
+    }
+
+    .logo strong{
+        font-size:31px;
+    }
+
+    .logo span{
+        font-size:8px;
+    }
+
+    .corner-player{
+        width:102px;
+        height:102px;
+        border-radius:27px;
+    }
+
+    .player-1{
+        left:10px;
+        top:105px;
+    }
+
+    .player-2{
+        right:10px;
+        top:105px;
+    }
+
+    .player-3{
+        left:10px;
+        bottom:55px;
+    }
+
+    .player-4{
+        right:10px;
+        bottom:55px;
+    }
+
+    .light-1{
+        left:105px;
+        top:91px;
+    }
+
+    .light-2{
+        right:105px;
+        top:91px;
+    }
+
+    .light-3{
+        left:105px;
+        bottom:40px;
+    }
+
+    .light-4{
+        right:105px;
+        bottom:40px;
+    }
+
+    .home-status{
+        width:135px;
+        height:135px;
+    }
+}
+
+/* ===== TOP BAR ===== */
+
+.topbar{
+    height:72px;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:rgba(10,11,14,.88);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    backdrop-filter:blur(18px);
+}
+
+.back-btn{
+    border:0;
+    border-radius:13px;
+    padding:10px 14px;
+    color:#d9dde4;
+    background:#1a1c21;
+    font-weight:800;
+}
+
+.top-title{
+    font-size:17px;
+    font-weight:950;
+}
+
+.top-subtitle{
+    margin-top:3px;
+    text-align:center;
+    color:#656c77;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+/* ===== GAME SELECT ===== */
+
+.select-page{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% 0%,#292d35,#0a0b0e 58%);
+}
+
+.select-content{
+    max-width:900px;
+    margin:auto;
+    padding:28px 18px 45px;
+}
+
+.section-title{
+    margin:0;
+    font-size:30px;
+    font-weight:1000;
+}
+
+.section-subtitle{
+    margin:7px 0 25px;
+    color:#737a85;
+    font-size:13px;
+}
+
+.games-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+    gap:17px;
+}
+
+.game-card{
+    position:relative;
+    min-height:205px;
+    padding:22px;
+    overflow:hidden;
+    border:0;
+    border-radius:25px;
+    background:
+        linear-gradient(145deg,#202329,#111318);
+    box-shadow:
+        0 16px 35px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.055);
+    transition:.16s;
+}
+
+.game-card:before{
+    content:"";
+    position:absolute;
+    width:130px;
+    height:130px;
+    right:-45px;
+    top:-45px;
+    border-radius:50%;
+    background:rgba(255,255,255,.035);
+}
+
+.game-card:active{
+    transform:scale(.97);
+}
+
+.game-icon{
+    width:55px;
+    height:55px;
+    display:grid;
+    place-items:center;
+    border-radius:17px;
+    background:#2b2f37;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    font-size:28px;
+}
+
+.game-card h3{
+    margin:17px 0 7px;
+    font-size:21px;
+    font-weight:950;
+}
+
+.game-card p{
+    max-width:290px;
+    margin:0;
+    color:#777e89;
+    line-height:1.5;
+    font-size:13px;
+}
+
+.play-label{
+    position:absolute;
+    right:21px;
+    bottom:20px;
+    padding:8px 12px;
+    border-radius:10px;
+    background:#292d34;
+    color:#dce0e5;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+/* ===== GAME ===== */
+
+.game-screen{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:
+        radial-gradient(circle at 50% 0%,#262a31,#090a0d 65%);
+}
+
+.game-header{
+    padding:20px 15px 16px;
+    text-align:center;
+}
+
+.game-header h2{
+    margin:0;
+    font-size:23px;
+    font-weight:1000;
+}
+
+.game-header p{
+    margin:6px 0 0;
+    color:#676e79;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.5px;
+}
+
+.players-area{
+    flex:1;
+    display:grid;
+    gap:10px;
+    padding:10px;
+}
+
+.players-2{
+    grid-template-columns:1fr 1fr;
+}
+
+.players-3{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.players-4{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr 1fr;
+}
+
+.tap-zone{
+    min-height:150px;
+    border:0;
+    border-radius:23px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    user-select:none;
+    touch-action:none;
+    background:
+        linear-gradient(145deg,#22262d,#111318);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.3),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    transition:.12s;
+}
+
+.tap-zone.pressed{
+    transform:scale(.975);
+    background:linear-gradient(145deg,#30353d,#181b20);
+}
+
+.player-number{
+    color:#727985;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:2px;
+    margin-bottom:12px;
+}
+
+.tap-text{
+    font-size:25px;
+    font-weight:1000;
+}
+
+.score{
+    margin-top:9px;
+    color:#676e79;
+    font-size:12px;
+    font-weight:800;
+}
+
+/* ===== WINNER ===== */
+
+.tap-zone.winner,
+.reaction-zone.winner{
+    background:
+        linear-gradient(145deg,#17652f,#092714)!important;
+    box-shadow:
+        0 0 35px rgba(50,232,117,.2),
+        inset 0 1px 0 rgba(150,255,180,.12);
+    transform:scale(.975);
+}
+
+.tap-zone.winner .tap-text,
+.reaction-zone.winner .tap-text{
+    color:#39ed7a;
+}
+
+.tap-zone.winner .player-number,
+.tap-zone.winner .score,
+.reaction-zone.winner .player-number,
+.reaction-zone.winner .score{
+    color:#8eeaaa;
+}
+
+/* ===== REACTION ===== */
+
+.reaction-zone.active{
+    background:
+        linear-gradient(145deg,#343941,#191c21);
+    box-shadow:
+        0 0 25px rgba(255,255,255,.06),
+        inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+/* ===== FOOTER ===== */
+
+.game-footer{
+    padding:14px 10px 18px;
+    text-align:center;
+    color:#555c67;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+/* ===== COUNTDOWN ===== */
+
+.countdown{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:grid;
+    place-items:center;
+    background:rgba(4,5,7,.91);
+    backdrop-filter:blur(15px);
+}
+
+.countdown-number{
+    font-size:110px;
+    font-weight:1000;
+    text-shadow:0 15px 45px rgba(0,0,0,.6);
+}
+
+/* ===== WINNER SCREEN ===== */
+
+.winner-screen{
+    min-height:100vh;
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:
+        radial-gradient(circle at center,#1c2b20,#090a0d 65%);
+}
+
+.winner-icon{
+    font-size:72px;
+    margin-bottom:16px;
+}
+
+.winner-screen h1{
+    margin:0;
+    color:#39ed7a;
+    font-size:34px;
+    font-weight:1000;
+}
+
+.winner-screen p{
+    color:#7d8590;
+    line-height:1.7;
+    margin:10px 0 28px;
+}
+
+.winner-screen .main-btn{
+    max-width:380px;
+    margin-top:8px;
+}
+
+/* ===== TOURNAMENT ===== */
+
+.tournament{
+    min-height:100vh;
+    text-align:center;
+    background:
+        radial-gradient(circle at 50% 0%,#292d35,#090a0d 60%);
+}
+
+.trophy{
+    margin-top:70px;
+    font-size:75px;
+}
+
+.tournament h1{
+    margin:15px 0 0;
+    font-size:34px;
+    font-weight:1000;
+}
+
+.tournament p{
+    max-width:430px;
+    margin:12px auto 30px;
+    padding:0 20px;
+    color:#777e89;
+    line-height:1.7;
+}
+
+.tournament .main-btn{
+    width:calc(100% - 40px);
+    max-width:400px;
+}
+
+@media(max-width:600px){
+    .logo strong{
+        font-size:35px;
+    }
+
+    .games-grid{
+        grid-template-columns:1fr;
+    }
+
+    .players-area{
+        gap:8px;
+        padding:8px;
+    }
+
+    .tap-zone{
+        border-radius:19px;
+    }
+
+    .players-3 .tap-zone{
+        min-height:130px;
+    }
+
+    .players-3 .tap-text{
+        font-size:19px;
+    }
+}
+
+/* ===== HOME MINI-GAMES BUTTON ===== */
+
+.home-mini-games{
+    position:absolute;
+    z-index:10;
+    left:50%;
+    bottom:48px;
+    transform:translateX(-50%);
+    width:190px;
+    height:48px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:16px;
+    background:linear-gradient(145deg,#252930,#15171c);
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:1px;
+    box-shadow:
+        0 12px 28px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.home-mini-games:active{
+    transform:translateX(-50%) scale(.95);
+}
+
+/* ===== FIVE RED REACTION LIGHTS ===== */
+
+.reaction-lights{
+    position:absolute;
+    z-index:30;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    padding:13px 17px;
+    border-radius:20px;
+    background:rgba(8,9,12,.9);
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.reaction-dot{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#250707;
+    transition:.12s;
+}
+
+.reaction-dot.on{
+    background:#ff2020;
+    box-shadow:
+        0 0 7px #ff2020,
+        0 0 18px rgba(255,32,32,.75),
+        0 0 32px rgba(255,32,32,.4);
+}
+
+@media(max-width:600px){
+
+    .reaction-lights{
+        gap:7px;
+        padding:11px 14px;
+        border-radius:17px;
+    }
+
+    .reaction-dot{
+        width:12px;
+        height:12px;
+    }
+
+}
+
+/* =========================================
+   REACTION RACE — CORNER PLAYER LAYOUT
+========================================= */
+
+.game-screen:has(.reaction-zone) .players-area{
+    position:relative;
+    display:block;
+    padding:0;
+    min-height:0;
+    flex:1;
+}
+
+/* Remove the normal grid arrangement */
+
+.game-screen:has(.reaction-zone) .reaction-zone{
+    position:absolute;
+    width:125px;
+    height:125px;
+    min-height:0;
+    margin:0;
+}
+
+/* 2 PLAYERS
+   LEFT CENTER + RIGHT CENTER
+*/
+
+.game-screen:has(.players-2) .reaction-zone:nth-child(1){
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.game-screen:has(.players-2) .reaction-zone:nth-child(2){
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+/* 3 PLAYERS
+   LEFT NORTH + RIGHT NORTH + LEFT SOUTH
+*/
+
+.game-screen:has(.players-3) .reaction-zone:nth-child(1){
+    left:18px;
+    top:30px;
+}
+
+.game-screen:has(.players-3) .reaction-zone:nth-child(2){
+    right:18px;
+    top:30px;
+}
+
+.game-screen:has(.players-3) .reaction-zone:nth-child(3){
+    left:18px;
+    bottom:30px;
+}
+
+/* 4 PLAYERS
+   FOUR CORNERS
+*/
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(1){
+    left:18px;
+    top:25px;
+}
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(2){
+    right:18px;
+    top:25px;
+}
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(3){
+    left:18px;
+    bottom:25px;
+}
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(4){
+    right:18px;
+    bottom:25px;
+}
+
+/* =========================================
+   CENTER FIVE LIGHTS
+========================================= */
+
+.game-screen:has(.reaction-zone) .reaction-lights{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:50;
+}
+
+/* PHONE SIZE */
+
+@media(max-width:600px){
+
+    .game-screen:has(.reaction-zone) .reaction-zone{
+        width:105px;
+        height:105px;
+        border-radius:25px;
+    }
+
+    .game-screen:has(.players-2) .reaction-zone:nth-child(1){
+        left:9px;
+    }
+
+    .game-screen:has(.players-2) .reaction-zone:nth-child(2){
+        right:9px;
+    }
+
+    .game-screen:has(.players-3) .reaction-zone:nth-child(1){
+        left:9px;
+        top:20px;
+    }
+
+    .game-screen:has(.players-3) .reaction-zone:nth-child(2){
+        right:9px;
+        top:20px;
+    }
+
+    .game-screen:has(.players-3) .reaction-zone:nth-child(3){
+        left:9px;
+        bottom:20px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(1){
+        left:9px;
+        top:15px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(2){
+        right:9px;
+        top:15px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(3){
+        left:9px;
+        bottom:15px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(4){
+        right:9px;
+        bottom:15px;
+    }
+
+}

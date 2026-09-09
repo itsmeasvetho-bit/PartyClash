@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#06131f">
+<title>Party Clash</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:#06131f;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+}
+
+body{
+  position:relative;
+  user-select:none;
+}
+
+.ocean{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(24,211,255,.18),transparent 32%),
+    linear-gradient(160deg,#06131f 0%,#062b43 48%,#03131e 100%);
+}
+
+.wave{
+  position:absolute;
+  width:180%;
+  height:55%;
+  left:-40%;
+  border-radius:50%;
+  border:1px solid rgba(65,220,255,.10);
+  animation:drift 12s linear infinite;
+}
+
+.wave:nth-child(1){top:48%}
+.wave:nth-child(2){top:55%;animation-duration:16s}
+.wave:nth-child(3){top:63%;animation-duration:21s}
+
+@keyframes drift{
+  from{transform:translateX(-4%) rotate(-2deg)}
+  to{transform:translateX(4%) rotate(2deg)}
+}
+
+.glow{
+  position:absolute;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:rgba(0,210,255,.10);
+  filter:blur(50px);
+}
+
+.glow.one{top:-100px;left:-90px}
+.glow.two{right:-120px;bottom:-80px;background:rgba(0,255,170,.08)}
+
+.app{
+  position:relative;
+  z-index:5;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:
+    max(20px,env(safe-area-inset-top))
+    18px
+    max(20px,env(safe-area-inset-bottom));
+}
+
+.brand{
+  text-align:center;
+  margin-bottom:18px;
+}
+
+.logo{
+  width:64px;
+  height:64px;
+  margin:0 auto 9px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  font-size:29px;
+  font-weight:900;
+  letter-spacing:-2px;
+  background:linear-gradient(145deg,#19dcff,#0076ff);
+  box-shadow:
+    0 0 35px rgba(0,194,255,.35),
+    inset 0 1px 1px rgba(255,255,255,.4);
+}
+
+.logo span{transform:skew(-8deg)}
+
+h1{
+  margin:0;
+  font-size:clamp(36px,10vw,58px);
+  line-height:.95;
+  letter-spacing:-3px;
+  font-weight:1000;
+}
+
+.subtitle{
+  margin-top:8px;
+  color:#91adbd;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.panel{
+  width:min(440px,100%);
+  padding:17px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:27px;
+  background:rgba(7,23,34,.76);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(18px);
+}
+
+.label{
+  color:#7995a6;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin:0 0 8px 3px;
+}
+
+.players{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:13px;
+}
+
+.player{
+  min-height:52px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:#0b202e;
+  color:#a9bec9;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.player:active{transform:scale(.96)}
+
+.player.active{
+  color:#fff;
+  border-color:rgba(25,220,255,.65);
+  background:linear-gradient(145deg,#0c4560,#0b2637);
+  box-shadow:
+    0 0 20px rgba(25,220,255,.15),
+    inset 0 0 20px rgba(25,220,255,.06);
+}
+
+.player b{
+  display:block;
+  font-size:19px;
+  margin-bottom:1px;
+}
+
+/* GAME SELECTION */
+
+.games{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-bottom:13px;
+}
+
+.game{
+  min-height:92px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:rgba(9,30,43,.9);
+  color:#fff;
+  text-align:left;
+  padding:12px;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.game:active{
+  transform:scale(.97);
+}
+
+.game.active{
+  border-color:rgba(255,216,77,.7);
+  background:linear-gradient(145deg,rgba(52,55,29,.95),rgba(12,39,47,.95));
+  box-shadow:
+    0 0 22px rgba(255,210,55,.12),
+    inset 0 0 20px rgba(255,220,70,.04);
+}
+
+.gameIcon{
+  font-size:27px;
+  margin-bottom:5px;
+}
+
+.gameName{
+  font-size:14px;
+  font-weight:1000;
+}
+
+.gameDesc{
+  margin-top:3px;
+  color:#7f99a7;
+  font-size:9px;
+  line-height:1.3;
+}
+
+.start{
+  width:100%;
+  height:58px;
+  border:0;
+  border-radius:18px;
+  color:#00131d;
+  font-size:17px;
+  font-weight:1000;
+  letter-spacing:.5px;
+  background:linear-gradient(135deg,#56efff,#14bfff 55%,#08e8a5);
+  box-shadow:
+    0 12px 30px rgba(0,205,255,.23),
+    inset 0 1px 0 rgba(255,255,255,.65);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.start:active{
+  transform:scale(.97);
+}
+
+.arrow{
+  display:inline-block;
+  margin-left:8px;
+}
+
+.info{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:11px;
+  color:#708a98;
+  font-size:9px;
+  font-weight:700;
+}
+
+.info span{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.footer{
+  position:absolute;
+  bottom:max(10px,env(safe-area-inset-bottom));
+  color:#476170;
+  font-size:9px;
+  letter-spacing:1.2px;
+}
+
+@media(max-height:650px){
+  .brand{margin-bottom:10px}
+
+  .logo{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    font-size:23px;
+    margin-bottom:5px;
+  }
+
+  h1{font-size:34px}
+
+  .subtitle{
+    margin-top:5px;
+    font-size:10px;
+  }
+
+  .panel{padding:13px}
+
+  .game{
+    min-height:76px;
+    padding:9px;
+  }
+
+  .gameIcon{
+    font-size:23px;
+    margin-bottom:2px;
+  }
+
+  .start{height:51px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="ocean">
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+</div>
+
+<main class="app">
+
+  <section class="brand">
+    <div class="logo"><span>PC</span></div>
+    <h1>PARTY CLASH</h1>
+    <div class="subtitle">Choose Your Battle</div>
+  </section>
+
+  <section class="panel">
+
+    <div class="label">Players</div>
+
+    <div class="players">
+      <button class="player" data-players="2">
+        <b>2</b>PLAYERS
+      </button>
+
+      <button class="player active" data-players="3">
+        <b>3</b>PLAYERS
+      </button>
+
+      <button class="player" data-players="4">
+        <b>4</b>PLAYERS
+      </button>
+    </div>
+
+    <div class="label">Choose Game</div>
+
+    <div class="games">
+
+      <button class="game active" data-game="island.html">
+        <div class="gameIcon">🏝️</div>
+        <div class="gameName">Island Panic</div>
+        <div class="gameDesc">Last player standing</div>
+      </button>
+
+      <button class="game" data-game="king-zone.html">
+        <div class="gameIcon">👑</div>
+        <div class="gameName">King Zone</div>
+        <div class="gameDesc">Control the moving zone</div>
+      </button>
+
+    </div>
+
+    <button class="start" id="startBtn">
+      START GAME <span class="arrow">→</span>
+    </button>
+
+    <div class="info">
+      <span>🎮 2–4 Players</span>
+      <span>⚡ Local Multiplayer</span>
+    </div>
+
+  </section>
+
+  <div class="footer">SURVIVE • MOVE • CLASH</div>
+
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  const playerButtons=document.querySelectorAll(".player");
+  const gameButtons=document.querySelectorAll(".game");
+  const startBtn=document.getElementById("startBtn");
+
+  let selectedPlayers=3;
+  let selectedGame="island.html";
+
+  playerButtons.forEach(button=>{
+    button.addEventListener("click",()=>{
+      selectedPlayers=Number(button.dataset.players);
+
+      playerButtons.forEach(b=>b.classList.remove("active"));
+      button.classList.add("active");
+
+      if(navigator.vibrate) navigator.vibrate(15);
+    });
+  });
+
+  gameButtons.forEach(button=>{
+    button.addEventListener("click",()=>{
+      selectedGame=button.dataset.game;
+
+      gameButtons.forEach(b=>b.classList.remove("active"));
+      button.classList.add("active");
+
+      if(navigator.vibrate) navigator.vibrate(15);
+    });
+  });
+
+  startBtn.addEventListener("click",()=>{
+    if(navigator.vibrate) navigator.vibrate(25);
+
+    window.location.href=
+      selectedGame+"?players="+encodeURIComponent(selectedPlayers);
+  });
+
+})();
+</script>
+
+</body>
+</html>

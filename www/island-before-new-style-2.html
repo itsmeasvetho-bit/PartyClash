@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Party Clash • Island Panic</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#06131f;
+    font-family:Arial,sans-serif;
+    touch-action:none;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+}
+
+#hud{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:82px;
+    padding:12px 15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:5;
+    pointer-events:none;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:1000;
+    background:#101f31dd;
+    border:1px solid #ffffff20;
+    box-shadow:0 8px 25px #0007;
+}
+
+.title{
+    color:white;
+    font-size:16px;
+    font-weight:1000;
+    letter-spacing:1.2px;
+}
+
+.sub{
+    margin-top:3px;
+    color:#8293a8;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:1.8px;
+}
+
+.timer{
+    width:64px;
+    height:50px;
+    border-radius:16px;
+    background:#0d1a29e8;
+    border:1px solid #ffffff18;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:25px;
+    font-weight:1000;
+    box-shadow:0 8px 28px #0007;
+}
+
+#scores{
+    position:fixed;
+    top:88px;
+    left:0;
+    right:0;
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    z-index:5;
+    pointer-events:none;
+}
+
+.score{
+    min-width:57px;
+    padding:7px 9px;
+    border-radius:12px;
+    background:#0b1827e8;
+    border:1px solid #ffffff16;
+    color:white;
+    font-size:10px;
+    font-weight:900;
+    text-align:center;
+}
+
+#joysticks{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    padding:0 12px;
+    z-index:10;
+    pointer-events:none;
+}
+
+.joyWrap{
+    width:104px;
+    height:104px;
+    position:relative;
+    pointer-events:auto;
+}
+
+.joy{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:#081421cc;
+    border:2px solid #ffffff19;
+    box-shadow:
+        inset 0 0 25px #0009,
+        0 8px 30px #0008;
+}
+
+.joyRing{
+    position:absolute;
+    inset:13px;
+    border-radius:50%;
+    border:1px solid #ffffff12;
+}
+
+.knob{
+    position:absolute;
+    width:42px;
+    height:42px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:#18283b;
+    border:2px solid;
+    box-shadow:0 5px 18px #0009;
+}
+
+.p1 .knob{border-color:#35a7ff}
+.p2 .knob{border-color:#ff4964}
+.p3 .knob{border-color:#55e56d}
+.p4 .knob{border-color:#ffd447}
+
+.joyLabel{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-15px;
+    text-align:center;
+    color:#7d8da1;
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:1.5px;
+}
+
+#overlay{
+    position:fixed;
+    inset:0;
+    z-index:30;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#02070ed9;
+    backdrop-filter:blur(13px);
+    padding:20px;
+}
+
+.panel{
+    width:min(380px,92vw);
+    padding:32px 22px 24px;
+    border-radius:30px;
+    text-align:center;
+    background:#0b1726f5;
+    border:1px solid #ffffff18;
+    box-shadow:0 25px 80px #000b;
+}
+
+.panelIcon{
+    font-size:52px;
+    margin-bottom:8px;
+}
+
+.panel h1{
+    color:white;
+    font-size:32px;
+    font-weight:1000;
+    letter-spacing:-1px;
+}
+
+.panel p{
+    color:#9aa9bb;
+    font-size:13px;
+    line-height:1.5;
+    margin:9px 0 24px;
+}
+
+#start{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:16px;
+    background:white;
+    color:#07101a;
+    font-size:15px;
+    font-weight:1000;
+}
+
+.hidden{
+    display:none!important;
+}
+
+@media(max-width:390px){
+    .joyWrap{
+        width:94px;
+        height:94px;
+    }
+
+    .knob{
+        width:40px;
+        height:40px;
+    }
+
+    #joysticks{
+        padding:0 7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+    <div class="brand">
+        <div class="logo">PC</div>
+        <div>
+            <div class="title">ISLAND PANIC</div>
+            <div class="sub">LAST PLAYER STANDING</div>
+        </div>
+    </div>
+
+    <div class="timer" id="timer">20</div>
+</div>
+
+<div id="scores"></div>
+<div id="joysticks"></div>
+
+<div id="overlay">
+    <div class="panel">
+        <div class="panelIcon">🏝️</div>
+        <h1 id="panelTitle">ISLAND PANIC</h1>
+        <p id="panelText">
+            Move carefully.<br>
+            The island is disappearing.
+        </p>
+        <button id="start">START CLASH</button>
+    </div>
+</div>
+
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+const timerEl=document.getElementById("timer");
+const scoresEl=document.getElementById("scores");
+const joystickEl=document.getElementById("joysticks");
+
+const overlay=document.getElementById("overlay");
+const panelTitle=document.getElementById("panelTitle");
+const panelText=document.getElementById("panelText");
+const startBtn=document.getElementById("start");
+
+let W=0;
+let H=0;
+let dpr=1;
+
+let running=false;
+let lastTime=0;
+let timeLeft=20;
+let destroyTimer=0;
+
+const COLS=7;
+const ROWS=8;
+
+const colors=[
+    "#35a7ff",
+    "#ff4964",
+    "#55e56d",
+    "#ffd447"
+];
+
+const playerCount=
+    Math.max(
+        2,
+        Math.min(
+            4,
+            Number(
+                new URLSearchParams(location.search)
+                .get("players")
+            ) || 2
+        )
+    );
+
+let tiles=[];
+let players=[];
+
+function resize(){
+
+    dpr=window.devicePixelRatio||1;
+
+    W=innerWidth;
+    H=innerHeight;
+
+    canvas.width=W*dpr;
+    canvas.height=H*dpr;
+
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
+
+    ctx.setTransform(
+        dpr,0,0,dpr,0,0
+    );
+}
+
+addEventListener("resize",resize);
+resize();
+
+function makeIsland(){
+
+    tiles=[];
+
+    const size=Math.min(
+        48,
+        Math.floor(
+            Math.min(
+                (W-30)/COLS,
+                (H-220)/ROWS
+            )
+        )
+    );
+
+    const islandW=COLS*size;
+    const islandH=ROWS*size;
+
+    const startX=
+        (W-islandW)/2;
+
+    const startY=
+        Math.max(
+            125,
+            (H-islandH)/2-5
+        );
+
+    for(let y=0;y<ROWS;y++){
+
+        for(let x=0;x<COLS;x++){
+
+            tiles.push({
+                x:startX+x*size,
+                y:startY+y*size,
+                size:size,
+                alive:true,
+                warning:false,
+                warningTime:0,
+                phase:Math.random()*6
+            });
+        }
+    }
+}
+
+function makePlayers(){
+
+    players=[];
+
+    const spots=[
+        [1,1],
+        [5,1],
+        [1,6],
+        [5,6]
+    ];
+
+    for(let i=0;i<playerCount;i++){
+
+        const spot=spots[i];
+
+        const tile=
+            tiles[
+                spot[1]*COLS+
+                spot[0]
+            ];
+
+        players.push({
+            id:i,
+            x:tile.x+tile.size/2,
+            y:tile.y+tile.size/2,
+            vx:0,
+            vy:0,
+            color:colors[i],
+            alive:true,
+            score:0,
+            joystickX:0,
+            joystickY:0
+        });
+    }
+}
+
+function createJoystick(player){
+
+    const wrap=
+        document.createElement("div");
+
+    wrap.className=
+        "joyWrap p"+(player.id+1);
+
+    wrap.innerHTML=`
+        <div class="joy">
+            <div class="joyRing"></div>
+            <div class="knob"></div>
+        </div>
+        <div class="joyLabel">
+            PLAYER ${player.id+1}
+        </div>
+    `;
+
+    joystickEl.appendChild(wrap);
+
+    const joy=wrap.querySelector(".joy");
+    const knob=wrap.querySelector(".knob");
+
+    let active=false;
+    let pointerId=null;
+
+    function updateJoystick(e){
+
+        if(!active)return;
+
+        const r=
+            joy.getBoundingClientRect();
+
+        const cx=
+            r.left+r.width/2;
+
+        const cy=
+            r.top+r.height/2;
+
+        let dx=e.clientX-cx;
+        let dy=e.clientY-cy;
+
+        const max=30;
+
+        const distance=
+            Math.sqrt(dx*dx+dy*dy);
+
+        if(distance>max){
+
+            dx=dx/distance*max;
+            dy=dy/distance*max;
+        }
+
+        knob.style.transform=
+            `translate(
+                calc(-50% + ${dx}px),
+                calc(-50% + ${dy}px)
+            )`;
+
+        /*
+         * LOW SENSITIVITY
+         *
+         * The joystick only gives a small
+         * amount of acceleration.
+         */
+
+        player.joystickX=
+            dx/max;
+
+        player.joystickY=
+            dy/max;
+    }
+
+    function release(e){
+
+        if(
+            pointerId!==null &&
+            e.pointerId!==pointerId
+        )return;
+
+        active=false;
+        pointerId=null;
+
+        knob.style.transform=
+            "translate(-50%,-50%)";
+
+        player.joystickX=0;
+        player.joystickY=0;
+    }
+
+    joy.addEventListener(
+        "pointerdown",
+        e=>{
+            e.preventDefault();
+
+            active=true;
+            pointerId=e.pointerId;
+
+            joy.setPointerCapture(
+                e.pointerId
+            );
+
+            updateJoystick(e);
+        }
+    );
+
+    joy.addEventListener(
+        "pointermove",
+        updateJoystick
+    );
+
+    joy.addEventListener(
+        "pointerup",
+        release
+    );
+
+    joy.addEventListener(
+        "pointercancel",
+        release
+    );
+}
+
+function makeJoysticks(){
+
+    joystickEl.innerHTML="";
+
+    players.forEach(createJoystick);
+}
+
+function getTileAt(x,y){
+
+    for(const t of tiles){
+
+        if(
+            x>=t.x &&
+            x<=t.x+t.size &&
+            y>=t.y &&
+            y<=t.y+t.size
+        ){
+            return t;
+        }
+    }
+
+    return null;
+}
+
+function destroyRandomTile(){
+
+    const available=
+        tiles.filter(
+            t=>t.alive&&!t.warning
+        );
+
+    if(available.length<=12)return;
+
+    const tile=
+        available[
+            Math.floor(
+                Math.random()*
+                available.length
+            )
+        ];
+
+    tile.warning=true;
+    tile.warningTime=.85;
+}
+
+function update(dt){
+
+    if(!running)return;
+
+    timeLeft-=dt;
+
+    timerEl.textContent=
+        Math.max(
+            0,
+            Math.ceil(timeLeft)
+        );
+
+    destroyTimer-=dt;
+
+    if(destroyTimer<=0){
+
+        destroyRandomTile();
+
+        destroyTimer=
+            Math.max(
+                .45,
+                .95-timeLeft*.012
+            );
+    }
+
+    for(const tile of tiles){
+
+        if(tile.warning){
+
+            tile.warningTime-=dt;
+
+            if(tile.warningTime<=0){
+
+                tile.warning=false;
+                tile.alive=false;
+            }
+        }
+    }
+
+    for(const p of players){
+
+        if(!p.alive)continue;
+
+        /*
+         * LOW-SENSITIVITY MOVEMENT
+         */
+        const acceleration=330;
+
+        p.vx+=
+            p.joystickX*
+            acceleration*
+            dt;
+
+        p.vy+=
+            p.joystickY*
+            acceleration*
+            dt;
+
+        /*
+         * Maximum walking speed.
+         */
+        const maxSpeed=82;
+
+        const speed=
+            Math.sqrt(
+                p.vx*p.vx+
+                p.vy*p.vy
+            );
+
+        if(speed>maxSpeed){
+
+            p.vx=
+                p.vx/speed*
+                maxSpeed;
+
+            p.vy=
+                p.vy/speed*
+                maxSpeed;
+        }
+
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
+
+        p.vx*=.86;
+        p.vy*=.86;
+
+        /*
+         * IMPORTANT:
+         * Never instantly kill a player just
+         * because the joystick was moved.
+         *
+         * We first find the tile underneath
+         * the character.
+         */
+
+        const tile=
+            getTileAt(p.x,p.y);
+
+        if(!tile){
+
+            /*
+             * Keep player inside the island
+             * boundary instead of instantly dying.
+             */
+            const first=tiles[0];
+            const last=tiles[tiles.length-1];
+
+            p.x=Math.max(
+                first.x+10,
+                Math.min(
+                    last.x+last.size-10,
+                    p.x
+                )
+            );
+
+            p.y=Math.max(
+                first.y+10,
+                Math.min(
+                    last.y+last.size-10,
+                    p.y
+                )
+            );
+        }
+
+        /*
+         * Only a destroyed tile causes a fall.
+         */
+        const current=
+            getTileAt(p.x,p.y);
+
+        if(current && !current.alive){
+
+            p.alive=false;
+        }
+    }
+
+    const alive=
+        players.filter(
+            p=>p.alive
+        );
+
+    if(alive.length<=1){
+
+        finish(alive[0]);
+        return;
+    }
+
+    if(timeLeft<=0){
+
+        finish(alive[0]);
+    }
+}
+
+function drawBackground(){
+
+    const g=
+        ctx.createRadialGradient(
+            W/2,H/2,
+            10,
+            W/2,H/2,
+            Math.max(W,H)*.75
+        );
+
+    g.addColorStop(
+        0,
+        "#14506a"
+    );
+
+    g.addColorStop(
+        1,
+        "#04101a"
+    );
+
+    ctx.fillStyle=g;
+    ctx.fillRect(0,0,W,H);
+
+    /*
+     * Animated water
+     */
+    ctx.lineWidth=1;
+
+    ctx.strokeStyle="#ffffff0a";
+
+    const t=
+        performance.now()*.001;
+
+    for(let y=105;y<H;y+=30){
+
+        ctx.beginPath();
+
+        for(
+            let x=-20;
+            x<W+20;
+            x+=18
+        ){
+
+            const wave=
+                Math.sin(
+                    x*.035+
+                    y*.045+
+                    t
+                )*2.5;
+
+            if(x===-20)
+                ctx.moveTo(x,y+wave);
+            else
+                ctx.lineTo(x,y+wave);
+        }
+
+        ctx.stroke();
+    }
+
+    /*
+     * Floating dots
+     */
+    ctx.fillStyle="#ffffff0b";
+
+    for(let i=0;i<22;i++){
+
+        const x=
+            (i*97+
+            performance.now()*.01)
+            %W;
+
+        const y=
+            105+
+            ((i*53)%Math.max(1,H-140));
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,y,
+            1.5,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+    }
+}
+
+function drawIsland(){
+
+    if(!tiles.length)return;
+
+    const first=tiles[0];
+    const last=tiles[tiles.length-1];
+
+    /*
+     * Island outer shadow
+     */
+    ctx.fillStyle="#00000066";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        first.x-15,
+        first.y-15,
+        last.x+
+        last.size-
+        first.x+
+        30,
+        last.y+
+        last.size-
+        first.y+
+        30,
+        28
+    );
+
+    ctx.fill();
+
+    /*
+     * Sand border
+     */
+    ctx.fillStyle="#c99d55";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        first.x-7,
+        first.y-7,
+        last.x+
+        last.size-
+        first.x+
+        14,
+        last.y+
+        last.size-
+        first.y+
+        14,
+        22
+    );
+
+    ctx.fill();
+
+    for(const tile of tiles){
+
+        if(!tile.alive)continue;
+
+        const pulse=
+            Math.sin(
+                performance.now()*.003+
+                tile.phase
+            )*.5+.5;
+
+        if(tile.warning){
+
+            const warn=
+                .65+
+                pulse*.35;
+
+            ctx.fillStyle=
+                `rgba(
+                    255,
+                    68,
+                    68,
+                    ${warn}
+                )`;
+        }else{
+
+            ctx.fillStyle=
+                "#25ad6d";
+        }
+
+        ctx.beginPath();
+
+        ctx.roundRect(
+            tile.x+2,
+            tile.y+2,
+            tile.size-4,
+            tile.size-4,
+            10
+        );
+
+        ctx.fill();
+
+        /*
+         * Grass highlight
+         */
+        if(!tile.warning){
+
+            ctx.fillStyle="#ffffff12";
+
+            ctx.beginPath();
+
+            ctx.roundRect(
+                tile.x+7,
+                tile.y+7,
+                tile.size-14,
+                5,
+                4
+            );
+
+            ctx.fill();
+
+            /*
+             * Tiny grass marks
+             */
+            ctx.strokeStyle="#ffffff0b";
+            ctx.lineWidth=1;
+
+            for(let i=0;i<2;i++){
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    tile.x+12+i*16,
+                    tile.y+tile.size-12
+                );
+
+                ctx.lineTo(
+                    tile.x+14+i*16,
+                    tile.y+tile.size-17
+                );
+
+                ctx.stroke();
+            }
+        }
+
+        if(tile.warning){
+
+            ctx.strokeStyle="#ffffff55";
+            ctx.lineWidth=2;
+
+            ctx.strokeRect(
+                tile.x+6,
+                tile.y+6,
+                tile.size-12,
+                tile.size-12
+            );
+        }
+    }
+}
+
+function drawPlayers(){
+
+    for(const p of players){
+
+        if(!p.alive)continue;
+
+        ctx.save();
+
+        ctx.translate(p.x,p.y);
+
+        /*
+         * Shadow
+         */
+        ctx.fillStyle="#00000066";
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            14,
+            16,
+            6,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+         * Glow
+         */
+        const glow=
+            ctx.createRadialGradient(
+                0,0,3,
+                0,0,29
+            );
+
+        glow.addColorStop(
+            0,
+            p.color+"88"
+        );
+
+        glow.addColorStop(
+            1,
+            p.color+"00"
+        );
+
+        ctx.fillStyle=glow;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,0,29,
+            0,Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+         * Body
+         */
+        ctx.fillStyle=p.color;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            15,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+         * Small highlight
+         */
+        ctx.fillStyle="#ffffff55";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            -5,
+            -6,
+            4,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+         * Eyes
+         */
+        ctx.fillStyle="#101722";
+
+        ctx.beginPath();
+        ctx.arc(
+            -5,-2,
+            2.4,
+            0,Math.PI*2
+        );
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(
+            5,-2,
+            2.4,
+            0,Math.PI*2
+        );
+        ctx.fill();
+
+        ctx.restore();
+
+        /*
+         * Player name
+         */
+        ctx.fillStyle="white";
+        ctx.font="900 9px Arial";
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            "P"+(p.id+1),
+            p.x,
+            p.y-24
+        );
+    }
+}
+
+function draw(){
+
+    ctx.clearRect(0,0,W,H);
+
+    drawBackground();
+    drawIsland();
+    drawPlayers();
+}
+
+function updateScores(){
+
+    scoresEl.innerHTML="";
+
+    players.forEach(p=>{
+
+        const el=
+            document.createElement("div");
+
+        el.className="score";
+
+        el.style.borderColor=p.color;
+
+        el.textContent=
+            "P"+(p.id+1)+
+            "  "+p.score;
+
+        scoresEl.appendChild(el);
+    });
+}
+
+function finish(winner){
+
+    if(!running)return;
+
+    running=false;
+
+    if(winner)
+        winner.score+=10;
+
+    updateScores();
+
+    setTimeout(()=>{
+
+        overlay.classList.remove(
+            "hidden"
+        );
+
+        if(winner){
+
+            panelTitle.textContent=
+                "🏆 P"+(winner.id+1)+
+                " WINS!";
+
+            panelText.textContent=
+                "The island belongs to Player "+
+                (winner.id+1)+".";
+
+        }else{
+
+            panelTitle.textContent=
+                "DRAW!";
+
+            panelText.textContent=
+                "Nobody survived the island.";
+        }
+
+        startBtn.textContent=
+            "PLAY AGAIN";
+
+    },450);
+}
+
+function startGame(){
+
+    running=false;
+
+    timeLeft=20;
+    destroyTimer=.9;
+
+    makeIsland();
+    makePlayers();
+    makeJoysticks();
+    updateScores();
+
+    timerEl.textContent="20";
+
+    panelTitle.textContent=
+        "ISLAND PANIC";
+
+    panelText.innerHTML=
+        "Move carefully.<br>"+
+        "The island is disappearing.";
+
+    startBtn.textContent=
+        "START CLASH";
+
+    overlay.classList.add(
+        "hidden"
+    );
+
+    running=true;
+    lastTime=performance.now();
+}
+
+startBtn.addEventListener(
+    "click",
+    startGame
+);
+
+function loop(now){
+
+    if(!lastTime)
+        lastTime=now;
+
+    const dt=
+        Math.min(
+            .033,
+            (now-lastTime)/1000
+        );
+
+    lastTime=now;
+
+    update(dt);
+    draw();
+
+    requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+</script>
+
+</body>
+</html>

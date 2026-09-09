@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Party Clash — Island Panic</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#06101b;
+    font-family:Arial,sans-serif;
+    touch-action:none;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+}
+
+#hud{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:76px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    color:white;
+    z-index:5;
+    pointer-events:none;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:1000;
+    background:#ffffff14;
+    border:1px solid #ffffff25;
+}
+
+.title{
+    font-size:16px;
+    font-weight:1000;
+    letter-spacing:1px;
+}
+
+.subtitle{
+    font-size:9px;
+    color:#8e9caf;
+    letter-spacing:1.5px;
+    margin-top:3px;
+}
+
+#timerBox{
+    min-width:62px;
+    padding:8px 12px;
+    border-radius:15px;
+    text-align:center;
+    background:#0d1826dd;
+    border:1px solid #ffffff18;
+    box-shadow:0 8px 30px #0005;
+}
+
+#timer{
+    font-size:25px;
+    font-weight:1000;
+}
+
+#scores{
+    position:fixed;
+    top:82px;
+    left:0;
+    right:0;
+    display:flex;
+    justify-content:center;
+    gap:7px;
+    z-index:5;
+    pointer-events:none;
+}
+
+.score{
+    min-width:54px;
+    padding:7px 9px;
+    border-radius:11px;
+    background:#0c1624dd;
+    border:1px solid #ffffff18;
+    color:white;
+    font-size:11px;
+    font-weight:900;
+    text-align:center;
+}
+
+#joysticks{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    padding:0 12px;
+    z-index:10;
+    pointer-events:none;
+}
+
+.joyWrap{
+    width:112px;
+    height:112px;
+    position:relative;
+    pointer-events:auto;
+}
+
+.joy{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:#0d1929bb;
+    border:2px solid #ffffff1c;
+    box-shadow:
+        inset 0 0 25px #0008,
+        0 8px 30px #0006;
+}
+
+.joy::before{
+    content:"";
+    position:absolute;
+    inset:16px;
+    border-radius:50%;
+    border:1px solid #ffffff12;
+}
+
+.knob{
+    position:absolute;
+    width:48px;
+    height:48px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    border:2px solid;
+    background:#17263a;
+    box-shadow:0 5px 20px #0009;
+}
+
+.p1 .knob{border-color:#35a7ff}
+.p2 .knob{border-color:#ff4964}
+.p3 .knob{border-color:#55e56d}
+.p4 .knob{border-color:#ffd447}
+
+.joyLabel{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-17px;
+    text-align:center;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
+    color:#8491a5;
+}
+
+#overlay{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    background:#030811d9;
+    backdrop-filter:blur(12px);
+    color:white;
+    z-index:30;
+    text-align:center;
+    padding:20px;
+}
+
+#overlay .panel{
+    width:min(370px,90vw);
+    padding:30px 22px;
+    border-radius:28px;
+    background:#0c1624ee;
+    border:1px solid #ffffff15;
+    box-shadow:0 25px 70px #0009;
+}
+
+#overlay h1{
+    font-size:34px;
+    font-weight:1000;
+    margin-bottom:8px;
+}
+
+#overlay p{
+    color:#9eabbd;
+    font-size:14px;
+    margin-bottom:24px;
+}
+
+#start{
+    width:100%;
+    border:0;
+    border-radius:16px;
+    padding:15px;
+    background:white;
+    color:#07101a;
+    font-size:16px;
+    font-weight:1000;
+}
+
+.hidden{
+    display:none!important;
+}
+
+@media(max-width:430px){
+    .joyWrap{
+        width:100px;
+        height:100px;
+    }
+
+    .knob{
+        width:44px;
+        height:44px;
+    }
+
+    #joysticks{
+        padding:0 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+    <div class="brand">
+        <div class="logo">PC</div>
+        <div>
+            <div class="title">ISLAND PANIC</div>
+            <div class="subtitle">LAST PLAYER STANDING</div>
+        </div>
+    </div>
+
+    <div id="timerBox">
+        <div id="timer">20</div>
+    </div>
+</div>
+
+<div id="scores"></div>
+
+<div id="joysticks"></div>
+
+<div id="overlay">
+    <div class="panel">
+        <h1>🏝️ Island Panic</h1>
+        <p>Move with your joystick.<br>Don't fall into the water.</p>
+        <button id="start">START CLASH</button>
+    </div>
+</div>
+
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+const timerEl=document.getElementById("timer");
+const scoresEl=document.getElementById("scores");
+const joystickEl=document.getElementById("joysticks");
+const overlay=document.getElementById("overlay");
+const startBtn=document.getElementById("start");
+
+let W=0,H=0,dpr=1;
+let running=false;
+let last=0;
+let timeLeft=20;
+let destroyTimer=0;
+
+const COLS=7;
+const ROWS=8;
+const SIZE=46;
+
+const colors=[
+    "#35a7ff",
+    "#ff4964",
+    "#55e56d",
+    "#ffd447"
+];
+
+let tiles=[];
+let players=[];
+
+let selectedPlayers=
+    Number(new URLSearchParams(location.search).get("players")) || 2;
+
+selectedPlayers=Math.max(
+    2,
+    Math.min(4,selectedPlayers)
+);
+
+function resize(){
+
+    dpr=devicePixelRatio||1;
+
+    W=innerWidth;
+    H=innerHeight;
+
+    canvas.width=W*dpr;
+    canvas.height=H*dpr;
+
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
+
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+addEventListener("resize",resize);
+resize();
+
+function makeIsland(){
+
+    tiles=[];
+
+    const size=Math.min(
+        SIZE,
+        Math.floor(
+            Math.min(
+                (W-24)/COLS,
+                (H-210)/ROWS
+            )
+        )
+    );
+
+    const sx=(W-COLS*size)/2;
+    const sy=Math.max(
+        125,
+        (H-ROWS*size)/2-20
+    );
+
+    for(let y=0;y<ROWS;y++){
+
+        for(let x=0;x<COLS;x++){
+
+            tiles.push({
+                x:sx+x*size,
+                y:sy+y*size,
+                size,
+                alive:true,
+                warning:false,
+                warningTime:0
+            });
+        }
+    }
+}
+
+function makePlayers(){
+
+    players=[];
+
+    const spots=[
+        [1,1],
+        [5,1],
+        [1,6],
+        [5,6]
+    ];
+
+    for(let i=0;i<selectedPlayers;i++){
+
+        const s=spots[i];
+
+        const t=
+            tiles[s[1]*COLS+s[0]];
+
+        players.push({
+            id:i,
+            x:t.x+t.size/2,
+            y:t.y+t.size/2,
+            vx:0,
+            vy:0,
+            color:colors[i],
+            alive:true,
+            score:0,
+            angle:0
+        });
+    }
+}
+
+function createJoystick(player){
+
+    const wrap=document.createElement("div");
+
+    wrap.className=
+        "joyWrap p"+(player.id+1);
+
+    wrap.innerHTML=`
+        <div class="joy">
+            <div class="knob"></div>
+        </div>
+        <div class="joyLabel">
+            P${player.id+1}
+        </div>
+    `;
+
+    joystickEl.appendChild(wrap);
+
+    const joy=wrap.querySelector(".joy");
+    const knob=wrap.querySelector(".knob");
+
+    let active=false;
+    let pointerId=null;
+
+    function move(e){
+
+        if(!active)return;
+
+        const r=
+            joy.getBoundingClientRect();
+
+        const cx=r.left+r.width/2;
+        const cy=r.top+r.height/2;
+
+        let dx=e.clientX-cx;
+        let dy=e.clientY-cy;
+
+        const max=31;
+
+        const distance=
+            Math.sqrt(dx*dx+dy*dy);
+
+        if(distance>max){
+
+            dx=dx/distance*max;
+            dy=dy/distance*max;
+        }
+
+        knob.style.transform=
+            `translate(calc(-50% + ${dx}px),
+             calc(-50% + ${dy}px))`;
+
+        player.vx=
+            (dx/max)*185;
+
+        player.vy=
+            (dy/max)*185;
+    }
+
+    function stop(e){
+
+        if(e.pointerId!==pointerId)return;
+
+        active=false;
+        pointerId=null;
+
+        knob.style.transform=
+            "translate(-50%,-50%)";
+
+        player.vx=0;
+        player.vy=0;
+    }
+
+    joy.addEventListener("pointerdown",e=>{
+
+        e.preventDefault();
+
+        active=true;
+        pointerId=e.pointerId;
+
+        joy.setPointerCapture(e.pointerId);
+
+        move(e);
+    });
+
+    joy.addEventListener("pointermove",move);
+    joy.addEventListener("pointerup",stop);
+    joy.addEventListener("pointercancel",stop);
+}
+
+function makeJoysticks(){
+
+    joystickEl.innerHTML="";
+
+    players.forEach(createJoystick);
+}
+
+function onTile(p){
+
+    for(const t of tiles){
+
+        if(!t.alive)continue;
+
+        const cx = t.x + t.size / 2;
+        const cy = t.y + t.size / 2;
+
+        const dx = p.x - cx;
+        const dy = p.y - cy;
+
+        if(
+            Math.abs(dx) < t.size * 0.46 &&
+            Math.abs(dy) < t.size * 0.46
+        ){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function destroyRandomTile(){
+
+    const available=
+        tiles.filter(t=>t.alive&&!t.warning);
+
+    if(available.length<=12)return;
+
+    const t=
+        available[
+            Math.floor(
+                Math.random()*available.length
+            )
+        ];
+
+    t.warning=true;
+    t.warningTime=.7;
+}
+
+function update(dt){
+
+    if(!running)return;
+
+    timeLeft-=dt;
+
+    timerEl.textContent=
+        Math.max(0,Math.ceil(timeLeft));
+
+    destroyTimer-=dt;
+
+    if(destroyTimer<=0){
+
+        destroyRandomTile();
+
+        destroyTimer=
+            Math.max(
+                .42,
+                .82-timeLeft*.012
+            );
+    }
+
+    for(const t of tiles){
+
+        if(t.warning){
+
+            t.warningTime-=dt;
+
+            if(t.warningTime<=0){
+
+                t.warning=false;
+                t.alive=false;
+            }
+        }
+    }
+
+    for(const p of players){
+
+        if(!p.alive)continue;
+
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
+
+        // Keep the character inside the playable island area.
+        const islandLeft = tiles[0].x + 6;
+        const islandTop = tiles[0].y + 6;
+        const islandRight =
+            tiles[COLS-1].x +
+            tiles[COLS-1].size - 6;
+        const islandBottom =
+            tiles[tiles.length-1].y +
+            tiles[tiles.length-1].size - 6;
+
+        p.x=Math.max(
+            islandLeft,
+            Math.min(islandRight,p.x)
+        );
+
+        p.y=Math.max(
+            islandTop,
+            Math.min(islandBottom,p.y)
+        );
+
+        p.vx*=.90;
+        p.vy*=.90;
+
+        if(
+            Math.abs(p.vx)+
+            Math.abs(p.vy)>5
+        ){
+            p.angle=
+                Math.atan2(p.vy,p.vx);
+        }
+
+        if(!onTile(p)){
+
+            p.alive=false;
+        }
+    }
+
+    const alive=
+        players.filter(p=>p.alive);
+
+    if(alive.length<=1){
+        finish(alive[0]);
+        return;
+    }
+
+    if(timeLeft<=0){
+        finish(
+            alive.sort(
+                (a,b)=>b.score-a.score
+            )[0]
+        );
+    }
+}
+
+function drawBackground(){
+
+    const g=
+        ctx.createRadialGradient(
+            W/2,H/2,20,
+            W/2,H/2,Math.max(W,H)*.75
+        );
+
+    g.addColorStop(0,"#17425a");
+    g.addColorStop(1,"#040b13");
+
+    ctx.fillStyle=g;
+    ctx.fillRect(0,0,W,H);
+
+    // water waves
+    ctx.strokeStyle="#ffffff0b";
+    ctx.lineWidth=1;
+
+    for(let y=110;y<H;y+=35){
+
+        ctx.beginPath();
+
+        for(let x=0;x<W;x+=18){
+
+            const wave=
+                Math.sin(
+                    x*.025+
+                    y*.04+
+                    performance.now()*.001
+                )*3;
+
+            ctx.lineTo(x,y+wave);
+        }
+
+        ctx.stroke();
+    }
+}
+
+function drawIsland(){
+
+    if(!tiles.length)return;
+
+    const first=tiles[0];
+
+    ctx.fillStyle="#00000066";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        first.x-12,
+        first.y-12,
+        COLS*first.size+24,
+        ROWS*first.size+24,
+        25
+    );
+
+    ctx.fill();
+
+    for(const t of tiles){
+
+        if(!t.alive)continue;
+
+        let color="#22aa69";
+
+        if(t.warning){
+
+            const pulse=
+                .75+
+                Math.sin(
+                    performance.now()/55
+                )*.25;
+
+            color=
+                `rgba(255,65,65,${pulse})`;
+        }
+
+        ctx.fillStyle=color;
+
+        ctx.beginPath();
+
+        ctx.roundRect(
+            t.x+2,
+            t.y+2,
+            t.size-4,
+            t.size-4,
+            10
+        );
+
+        ctx.fill();
+
+        if(!t.warning){
+
+            ctx.fillStyle="#ffffff12";
+
+            ctx.fillRect(
+                t.x+7,
+                t.y+7,
+                t.size-14,
+                5
+            );
+        }
+    }
+}
+
+function drawPlayers(){
+
+    for(const p of players){
+
+        if(!p.alive)continue;
+
+        ctx.save();
+
+        ctx.translate(p.x,p.y);
+
+        // shadow
+        ctx.fillStyle="#00000066";
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,13,17,6,
+            0,0,Math.PI*2
+        );
+
+        ctx.fill();
+
+        // glow
+        const glow=
+            ctx.createRadialGradient(
+                0,0,4,
+                0,0,27
+            );
+
+        glow.addColorStop(
+            0,p.color+"88"
+        );
+
+        glow.addColorStop(
+            1,p.color+"00"
+        );
+
+        ctx.fillStyle=glow;
+
+        ctx.beginPath();
+
+        ctx.arc(0,0,27,0,Math.PI*2);
+
+        ctx.fill();
+
+        // body
+        ctx.fillStyle=p.color;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,0,15,
+            0,Math.PI*2
+        );
+
+        ctx.fill();
+
+        // face
+        ctx.fillStyle="#111722";
+
+        ctx.beginPath();
+        ctx.arc(-5,-3,2.5,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(5,-3,2.5,0,Math.PI*2);
+        ctx.fill();
+
+        // direction marker
+        ctx.fillStyle="#ffffff99";
+
+        ctx.beginPath();
+
+        ctx.moveTo(0,-19);
+        ctx.lineTo(-4,-13);
+        ctx.lineTo(4,-13);
+        ctx.closePath();
+
+        ctx.fill();
+
+        ctx.restore();
+
+        ctx.fillStyle="white";
+        ctx.font="900 10px Arial";
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            "P"+(p.id+1),
+            p.x,
+            p.y-24
+        );
+    }
+}
+
+function draw(){
+
+    ctx.clearRect(0,0,W,H);
+
+    drawBackground();
+    drawIsland();
+    drawPlayers();
+}
+
+function updateScores(){
+
+    scoresEl.innerHTML="";
+
+    players.forEach(p=>{
+
+        const s=
+            document.createElement("div");
+
+        s.className="score";
+
+        s.style.borderColor=p.color;
+
+        s.textContent=
+            "P"+(p.id+1)+"  "+p.score;
+
+        scoresEl.appendChild(s);
+    });
+}
+
+function finish(winner){
+
+    if(!running)return;
+
+    running=false;
+
+    if(winner){
+        winner.score+=10;
+    }
+
+    updateScores();
+
+    setTimeout(()=>{
+
+        overlay.classList.remove("hidden");
+
+        overlay.querySelector("h1").textContent=
+            winner
+            ?"🏆 P"+(winner.id+1)+" WINS!"
+            :"DRAW!";
+
+        overlay.querySelector("p").textContent=
+            winner
+            ?"The island belongs to you!"
+            :"Everyone fell!";
+
+        startBtn.textContent="PLAY AGAIN";
+
+    },450);
+}
+
+function startGame(){
+
+    running=false;
+
+    timeLeft=20;
+    destroyTimer=.8;
+
+    makeIsland();
+    makePlayers();
+    makeJoysticks();
+    updateScores();
+
+    timerEl.textContent="20";
+
+    overlay.classList.add("hidden");
+
+    running=true;
+    last=performance.now();
+}
+
+startBtn.addEventListener(
+    "click",
+    startGame
+);
+
+function loop(now){
+
+    if(!last)last=now;
+
+    const dt=Math.min(
+        .035,
+        (now-last)/1000
+    );
+
+    last=now;
+
+    update(dt);
+    draw();
+
+    requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+</script>
+
+</body>
+</html>

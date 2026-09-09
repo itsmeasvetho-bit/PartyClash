@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Party Clash</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#020713;
+  color:white;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
+
+.bg{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(0,180,255,.18),transparent 35%),
+    radial-gradient(circle at 80% 70%,rgba(100,40,255,.18),transparent 38%),
+    linear-gradient(145deg,#020817,#06152b 50%,#020713);
+}
+
+.glow{
+  position:absolute;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  filter:blur(70px);
+  opacity:.35;
+  animation:float 7s ease-in-out infinite alternate;
+}
+
+.g1{
+  background:#00bfff;
+  left:-100px;
+  top:-80px;
+}
+
+.g2{
+  background:#6940ff;
+  right:-100px;
+  bottom:-80px;
+  animation-delay:2s;
+}
+
+@keyframes float{
+  from{transform:translate(0,0)}
+  to{transform:translate(35px,25px)}
+}
+
+.home{
+  position:relative;
+  z-index:2;
+  width:min(92vw,430px);
+  max-height:96vh;
+  padding:22px 18px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.logo{
+  width:74px;
+  height:74px;
+  margin:0 auto 10px;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:31px;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:-3px;
+  background:linear-gradient(145deg,#12d9ff,#366cff 55%,#6d39ff);
+  box-shadow:
+    0 0 25px rgba(20,180,255,.45),
+    inset 0 1px 1px rgba(255,255,255,.5);
+}
+
+h1{
+  margin:0;
+  font-size:39px;
+  line-height:1;
+  letter-spacing:2px;
+  font-weight:1000;
+}
+
+.sub{
+  margin-top:8px;
+  color:#8ca5c4;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+.section{
+  margin-top:22px;
+}
+
+.label{
+  text-align:left;
+  margin:0 0 9px 3px;
+  font-size:11px;
+  font-weight:900;
+  color:#91a8c5;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.players{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+
+.player{
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:15px;
+  padding:13px 8px;
+  background:rgba(255,255,255,.055);
+  color:white;
+  font-size:18px;
+  font-weight:900;
+  transition:.18s;
+}
+
+.player small{
+  display:block;
+  margin-top:3px;
+  color:#7189a8;
+  font-size:9px;
+  letter-spacing:1px;
+}
+
+.player.active{
+  border-color:#17cfff;
+  background:linear-gradient(145deg,rgba(0,205,255,.22),rgba(55,75,255,.2));
+  box-shadow:0 0 20px rgba(0,200,255,.18);
+  transform:translateY(-2px);
+}
+
+#gameSection{
+  display:none;
+  animation:appear .28s ease-out;
+}
+
+#gameSection.show{
+  display:block;
+}
+
+@keyframes appear{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.games{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.game{
+  min-height:115px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;
+  background:rgba(255,255,255,.055);
+  color:white;
+  padding:14px 9px;
+  transition:.18s;
+}
+
+.game:active{
+  transform:scale(.97);
+}
+
+.game.active{
+  border-color:#8d65ff;
+  background:linear-gradient(145deg,rgba(70,120,255,.2),rgba(125,60,255,.2));
+  box-shadow:0 0 22px rgba(110,80,255,.2);
+}
+
+.gameIcon{
+  font-size:32px;
+  margin-bottom:7px;
+}
+
+.gameName{
+  font-size:14px;
+  font-weight:1000;
+}
+
+.gameDesc{
+  margin-top:4px;
+  font-size:9px;
+  line-height:1.3;
+  color:#8299b5;
+}
+
+.start{
+  width:100%;
+  margin-top:16px;
+  padding:16px;
+  border:0;
+  border-radius:17px;
+  color:white;
+  font-size:17px;
+  font-weight:1000;
+  letter-spacing:1.5px;
+  background:linear-gradient(100deg,#00bdf7,#416dff,#713cff);
+  box-shadow:
+    0 10px 30px rgba(40,100,255,.25),
+    inset 0 1px 1px rgba(255,255,255,.35);
+}
+
+.start:active{
+  transform:scale(.98);
+}
+
+.tip{
+  margin-top:11px;
+  font-size:9px;
+  color:#526b89;
+  letter-spacing:.7px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg">
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+</div>
+
+<main class="home">
+
+  <div class="logo">PC</div>
+
+  <h1>PARTY CLASH</h1>
+  <div class="sub">Local Multiplayer Battles</div>
+
+  <div class="section">
+    <div class="label">1 • Choose Players</div>
+
+    <div class="players">
+      <button class="player" data-players="2">
+        2
+        <small>PLAYERS</small>
+      </button>
+
+      <button class="player active" data-players="3">
+        3
+        <small>PLAYERS</small>
+      </button>
+
+      <button class="player" data-players="4">
+        4
+        <small>PLAYERS</small>
+      </button>
+    </div>
+  </div>
+
+  <div class="section" id="gameSection">
+
+    <div class="label">2 • Choose Game</div>
+
+    <div class="games">
+
+      <button class="game active" data-game="island.html">
+        <div class="gameIcon">🏝️</div>
+        <div class="gameName">Island Panic</div>
+        <div class="gameDesc">Last player standing</div>
+      </button>
+
+      <button class="game" data-game="king-zone.html">
+        <div class="gameIcon">👑</div>
+        <div class="gameName">King Zone</div>
+        <div class="gameDesc">Control the moving zone</div>
+      </button>
+
+    </div>
+
+    <button class="start" id="startBtn">
+      START GAME
+    </button>
+
+    <div class="tip">
+      Same device • Local Multiplayer
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+let selectedPlayers = 3;
+let selectedGame = "island.html";
+
+const playerButtons = document.querySelectorAll(".player");
+const gameButtons = document.querySelectorAll(".game");
+const gameSection = document.getElementById("gameSection");
+const startBtn = document.getElementById("startBtn");
+
+/* Player selection */
+playerButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    selectedPlayers = Number(button.dataset.players);
+
+    playerButtons.forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+
+    /* Reveal games only after player count is selected */
+    gameSection.classList.add("show");
+
+  });
+
+});
+
+/* Game selection */
+gameButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    selectedGame = button.dataset.game;
+
+    gameButtons.forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+
+  });
+
+});
+
+/* Start */
+startBtn.addEventListener("click", () => {
+
+  window.location.href =
+    selectedGame + "?players=" + selectedPlayers;
+
+});
+</script>
+
+</body>
+</html>

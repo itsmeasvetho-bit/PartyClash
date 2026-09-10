@@ -119,27 +119,38 @@ canvas{
 #controls{
   position:absolute;
   z-index:6;
-  left:0;
-  right:0;
-  bottom:max(14px,env(safe-area-inset-bottom));
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  padding:0 14px;
+  inset:0;
   pointer-events:none;
 }
 
 .joyWrap{
-  position:relative;
-  width:126px;
-  height:148px;
+  position:absolute;
+  width:104px;
+  height:126px;
   display:flex;
   flex-direction:column;
   align-items:center;
   pointer-events:none;
 }
 
+.p1Joy{
+  left:14px;
+  bottom:max(14px,env(safe-area-inset-bottom));
+}
+
+.p2Joy{
+  right:14px;
+  bottom:max(14px,env(safe-area-inset-bottom));
+}
+
+.p3Joy{
+  left:50%;
+  transform:translateX(-50%);
+  bottom:max(14px,env(safe-area-inset-bottom));
+}
+
 .joyName{
+
   margin-bottom:5px;
   padding:3px 9px;
   border-radius:8px;
@@ -152,8 +163,8 @@ canvas{
 }
 
 .joystick{
-  width:126px;
-  height:126px;
+  width:104px;
+  height:104px;
   position:relative;
   border-radius:50%;
   pointer-events:auto;
@@ -593,7 +604,7 @@ function update(dt){
   const a=arena();
 
   players.forEach((p,i)=>{
-    if(i===0) moveHuman(p,dt);
+    if(i < 3 && i < playerCount) moveHuman(p,dt);
     else moveAI(p,dt);
 
     p.x=Math.max(a.x+p.radius,Math.min(a.x+a.w-p.radius,p.x));
@@ -862,7 +873,14 @@ function setupJoystick(index){
   });
 }
 
-setupJoystick(0);
-setupJoystick(1);
-setupJoystick(2);
+for(let i=0;i<3;i++){
+  const wrap=document.querySelector(".p"+(i+1)+"Joy");
+  if(wrap) wrap.style.display=(i<playerCount)?"flex":"none";
+  if(i<playerCount) setupJoystick(i);
+}
 
+
+})();
+</script>
+</body>
+</html>

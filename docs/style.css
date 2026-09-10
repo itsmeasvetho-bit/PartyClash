@@ -1,0 +1,776 @@
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #080b12;
+    color: #ffffff;
+}
+
+body {
+    user-select: none;
+}
+
+button {
+    font: inherit;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+/* =================================
+   APP
+================================= */
+
+#app {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+}
+
+/* =================================
+   HOME
+================================= */
+
+.home {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(74, 93, 255, .18), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(168, 76, 255, .14), transparent 30%),
+        linear-gradient(145deg, #080b12, #0d1220 55%, #080b12);
+}
+
+/* subtle background shapes */
+
+.home::before,
+.home::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.home::before {
+    width: 180px;
+    height: 180px;
+    top: -90px;
+    right: -60px;
+    background: rgba(80, 110, 255, .08);
+}
+
+.home::after {
+    width: 150px;
+    height: 150px;
+    bottom: -80px;
+    left: -50px;
+    background: rgba(155, 80, 255, .07);
+}
+
+/* =================================
+   LOGO
+================================= */
+
+.logo {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 28px;
+}
+
+.logo strong {
+    display: block;
+    font-size: clamp(30px, 9vw, 48px);
+    font-weight: 900;
+    letter-spacing: 2px;
+    line-height: 1;
+    background: linear-gradient(90deg, #ffffff, #9faeff, #d0a6ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.logo span {
+    display: block;
+    margin-top: 9px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #7f8aa3;
+}
+
+/* =================================
+   HOME STATUS
+================================= */
+
+.home-status {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 420px);
+    padding: 18px 20px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 20px;
+    background: rgba(18, 23, 36, .82);
+    box-shadow: 0 16px 45px rgba(0, 0, 0, .28);
+    text-align: center;
+}
+
+.home-status-title {
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #b9c3dd;
+}
+
+.home-status-text {
+    margin-top: 7px;
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: .5px;
+}
+
+/* =================================
+   HOME PLAYER BUTTONS
+================================= */
+
+.home-players {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 420px);
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.corner-player {
+    min-height: 76px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: linear-gradient(145deg, #171e30, #101624);
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .05);
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: .7px;
+    transition: transform .12s ease, background .12s ease;
+}
+
+.corner-player:active {
+    transform: scale(.96);
+    background: #202941;
+}
+
+.corner-player.player-1 {
+    border-top: 2px solid #5b7cff;
+}
+
+.corner-player.player-2 {
+    border-top: 2px solid #9a6cff;
+}
+
+.corner-player.player-3 {
+    border-top: 2px solid #38c8ff;
+}
+
+.corner-player.player-4 {
+    border-top: 2px solid #f1b84b;
+}
+
+/* =================================
+   MINI GAMES BUTTON
+================================= */
+
+.home-mini-games {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 420px);
+    min-height: 62px;
+    margin-top: 14px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #536dff, #7657e8);
+    box-shadow: 0 14px 32px rgba(83, 109, 255, .24);
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.home-mini-games:active {
+    transform: scale(.97);
+}
+
+/* =================================
+   HOME FOOTER MESSAGE
+================================= */
+
+.home-reaction-message {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #68738c;
+    text-align: center;
+}
+
+/* =================================
+   GAME SELECT
+================================= */
+
+.select-page {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    overflow-y: auto;
+    background:
+        radial-gradient(circle at 80% 10%, rgba(112, 86, 255, .12), transparent 30%),
+        #080b12;
+    padding-bottom: 30px;
+}
+
+.topbar {
+    min-height: 76px;
+    padding: 15px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+    background: rgba(8, 11, 18, .88);
+}
+
+.top-title {
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-align: center;
+}
+
+.top-subtitle {
+    margin-top: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #717c95;
+    text-align: center;
+}
+
+.back-btn {
+    justify-self: start;
+    padding: 11px 14px;
+    border-radius: 12px;
+    background: #151b29;
+    border: 1px solid rgba(255, 255, 255, .07);
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.select-content {
+    width: min(100%, 900px);
+    margin: auto;
+    padding: 28px 18px;
+}
+
+.section-title {
+    margin: 0;
+    font-size: clamp(25px, 7vw, 38px);
+    font-weight: 900;
+}
+
+.section-subtitle {
+    margin: 8px 0 22px;
+    color: #78839b;
+    font-size: 13px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.game-card {
+    padding: 20px;
+    min-height: 230px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, .07);
+    background: linear-gradient(145deg, #151b29, #0e131f);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .22);
+    transition: transform .12s ease;
+}
+
+.game-card:active {
+    transform: scale(.97);
+}
+
+.game-icon {
+    font-size: 38px;
+    margin-bottom: 18px;
+}
+
+.game-card h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.game-card p {
+    min-height: 52px;
+    margin: 10px 0 18px;
+    color: #7e89a1;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.play-label {
+    color: #8fa3ff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+}
+
+/* =================================
+   GAME SCREEN
+================================= */
+
+.game-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center, rgba(80, 100, 180, .08), transparent 45%),
+        #080b12;
+}
+
+.game-header {
+    position: absolute;
+    z-index: 10;
+    top: 18px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+}
+
+.game-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.game-header p {
+    margin: 7px 0 0;
+    color: #6f7a91;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+/* =================================
+   PLAYER AREAS
+================================= */
+
+.players-area {
+    position: absolute;
+    inset: 0;
+    padding: 100px 16px 60px;
+    display: grid;
+    gap: 12px;
+}
+
+.players-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.players-3,
+.players-4 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.tap-zone {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: 24px;
+    background: #121824;
+    touch-action: manipulation;
+    transition: transform .08s ease, background .12s ease;
+}
+
+.tap-zone:active {
+    transform: scale(.985);
+}
+
+.player-number {
+    color: #77839b;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.tap-text {
+    margin-top: 12px;
+    font-size: clamp(25px, 8vw, 42px);
+    font-weight: 900;
+}
+
+.score {
+    margin-top: 8px;
+    color: #8792a9;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.tap-zone.pressed {
+    background: #1b2436;
+}
+
+.tap-zone.winner {
+    background: linear-gradient(145deg, #163b2b, #10291f);
+    border-color: #42d58b;
+}
+
+.tap-zone.winner .tap-text {
+    color: #5ee69f;
+}
+
+/* =================================
+   REACTION RACE
+================================= */
+
+.reaction-zone {
+    background: #101621;
+}
+
+.reaction-zone.active {
+    background: #172238;
+}
+
+.reaction-zone.active .tap-text {
+    color: #aebcff;
+}
+
+.reaction-lights {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.reaction-dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #242936;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .04);
+}
+
+.reaction-dot.on {
+    background: #ff304f;
+    box-shadow:
+        0 0 18px rgba(255, 48, 79, .55),
+        0 0 35px rgba(255, 48, 79, .18);
+}
+
+.game-footer {
+    position: absolute;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    bottom: 17px;
+    text-align: center;
+    color: #68738b;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    pointer-events: none;
+}
+
+/* =================================
+   COUNTDOWN
+================================= */
+
+.countdown {
+    position: absolute;
+    z-index: 100;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 7, 12, .72);
+    backdrop-filter: blur(7px);
+}
+
+.countdown-number {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 35px;
+    background: #171e2d;
+    border: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+    font-size: 58px;
+    font-weight: 900;
+}
+
+/* =================================
+   WINNER SCREEN
+================================= */
+
+.winner-screen,
+.tournament {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 30px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background:
+        radial-gradient(circle at 50% 30%, rgba(91, 119, 255, .14), transparent 35%),
+        #080b12;
+}
+
+.winner-icon,
+.trophy {
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.winner-screen h1,
+.tournament h1 {
+    margin: 0;
+    font-size: clamp(30px, 9vw, 50px);
+    font-weight: 900;
+}
+
+.winner-screen p,
+.tournament p {
+    max-width: 400px;
+    margin: 12px 0 28px;
+    color: #7c879e;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.main-btn {
+    width: min(100%, 320px);
+    min-height: 56px;
+    margin: 5px 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #536dff, #7657e8);
+    box-shadow: 0 12px 28px rgba(83, 109, 255, .22);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.main-btn:active {
+    transform: scale(.97);
+}
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-card {
+        min-height: 190px;
+    }
+
+    .players-3 {
+        grid-template-areas:
+            "p1 p2"
+            "p3 p3";
+    }
+
+    .players-3 .tap-zone:nth-child(1) {
+        grid-area: p1;
+    }
+
+    .players-3 .tap-zone:nth-child(2) {
+        grid-area: p2;
+    }
+
+    .players-3 .tap-zone:nth-child(3) {
+        grid-area: p3;
+    }
+
+    .reaction-lights {
+        gap: 8px;
+    }
+
+    .reaction-dot {
+        width: 21px;
+        height: 21px;
+    }
+}
+
+@media (max-height: 650px) {
+
+    .logo {
+        margin-top: 4px;
+        margin-bottom: 16px;
+    }
+
+    .home-status {
+        padding: 12px 16px;
+    }
+
+    .corner-player {
+        min-height: 58px;
+    }
+
+    .home-mini-games {
+        min-height: 52px;
+    }
+}
+
+/* =================================
+   TAP BATTLE
+================================= */
+
+.tap-battle-screen .battle-meter {
+    position: absolute;
+    z-index: 25;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(76vw, 420px);
+    height: 22px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #242a38;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 12px 30px rgba(0,0,0,.3);
+    pointer-events: none;
+}
+
+.tap-battle-screen .battle-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #5d78ff, #9b68ff);
+    transition: width .08s linear;
+}
+
+.tap-battle-screen .battle-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.tap-battle-screen .battle-zone {
+    background: #111827;
+}
+
+.tap-battle-screen .battle-zone:nth-child(1) {
+    border-top: 2px solid #5d78ff;
+}
+
+.tap-battle-screen .battle-zone:last-child {
+    border-top: 2px solid #9b68ff;
+}
+
+.tap-battle-screen .battle-zone.winner {
+    border-color: #42d58b;
+}
+
+@media (max-width: 600px) {
+
+    .tap-battle-screen .battle-meter {
+        width: 70vw;
+    }
+
+}
+
+/* =================================
+   GAME LIBRARY — 3+ GAME FIX
+================================= */
+
+.games-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.game-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 210px;
+}
+
+@media (max-width: 600px) {
+    .select-page {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .select-content {
+        padding-bottom: 50px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-card {
+        min-height: 175px;
+    }
+}

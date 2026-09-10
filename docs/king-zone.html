@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Party Clash • King Zone</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#06131f;
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
+  user-select:none;
+}
+
+body{
+  position:relative;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+#hud{
+  position:absolute;
+  z-index:5;
+  top:max(12px,env(safe-area-inset-top));
+  left:12px;
+  right:12px;
+  pointer-events:none;
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.brand{
+  padding:8px 12px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  background:rgba(4,18,29,.72);
+  backdrop-filter:blur(12px);
+}
+
+.logo{
+  font-weight:1000;
+  font-size:14px;
+  letter-spacing:1px;
+}
+
+.gameName{
+  margin-top:2px;
+  font-size:10px;
+  color:#89a5b5;
+  letter-spacing:1.5px;
+}
+
+.timer{
+  min-width:64px;
+  padding:10px 14px;
+  text-align:center;
+  border-radius:15px;
+  background:rgba(4,18,29,.78);
+  border:1px solid rgba(255,255,255,.1);
+  font-size:20px;
+  font-weight:1000;
+}
+
+#scores{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+
+.score{
+  padding:6px 10px;
+  border-radius:10px;
+  background:rgba(4,18,29,.75);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:11px;
+  font-weight:900;
+}
+
+#zoneLabel{
+  position:absolute;
+  z-index:4;
+  top:92px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:7px 13px;
+  border-radius:999px;
+  background:rgba(4,18,29,.7);
+  border:1px solid rgba(255,255,255,.1);
+  color:#ffe66d;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+
+#controls{
+  position:absolute;
+  z-index:6;
+  left:0;
+  right:0;
+  bottom:max(14px,env(safe-area-inset-bottom));
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding:0 14px;
+  pointer-events:none;
+}
+
+.joyWrap{
+  position:relative;
+  width:126px;
+  height:148px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  pointer-events:none;
+}
+
+.joyName{
+  margin-bottom:5px;
+  padding:3px 9px;
+  border-radius:8px;
+  background:rgba(3,15,25,.75);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:1px;
+}
+
+.joystick{
+  width:126px;
+  height:126px;
+  position:relative;
+  border-radius:50%;
+  pointer-events:auto;
+  touch-action:none;
+  background:rgba(6,25,39,.58);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.38),
+    inset 0 0 35px rgba(255,255,255,.035);
+  backdrop-filter:blur(12px);
+}
+
+.joystick-ring{
+  position:absolute;
+  inset:13px;
+  border-radius:50%;
+  border:1px solid rgba(80,220,255,.16);
+  box-shadow:inset 0 0 20px rgba(0,210,255,.06);
+}
+
+.joystick-thumb{
+  position:absolute;
+  width:52px;
+  height:52px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:linear-gradient(145deg,#63edff,#08aeea);
+  border:2px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 0 24px rgba(20,210,255,.42),
+    inset 0 2px 4px rgba(255,255,255,.45);
+  transition:transform .08s ease-out;
+}
+
+.joystick-thumb:after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  left:7px;
+  top:6px;
+  border-radius:50%;
+  background:rgba(255,255,255,.3);
+}
+
+@media(max-height:700px){
+  .joyWrap{
+    width:94px;
+    height:112px;
+  }
+
+  .joystick{
+    width:94px;
+    height:94px;
+  }
+
+  .joystick-thumb{
+    width:42px;
+    height:42px;
+  }
+
+  .joystick-ring{
+    inset:10px;
+  }
+
+  .joyName{
+    font-size:8px;
+  }
+}
+
+#overlay{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(2,10,17,.58);
+  backdrop-filter:blur(8px);
+}
+
+.panel{
+  width:min(400px,100%);
+  padding:28px 22px;
+  text-align:center;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(7,23,34,.88);
+  box-shadow:0 30px 90px rgba(0,0,0,.55);
+}
+
+.icon{
+  font-size:52px;
+  margin-bottom:8px;
+}
+
+h1{
+  margin:0;
+  font-size:34px;
+  letter-spacing:-1px;
+}
+
+p{
+  color:#8fa7b5;
+  font-size:13px;
+  line-height:1.5;
+  margin:10px 0 20px;
+}
+
+button{
+  width:100%;
+  height:58px;
+  border:0;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffe66d,#ffb703);
+  color:#211900;
+  font-size:17px;
+  font-weight:1000;
+}
+
+.hidden{
+  display:none!important;
+}
+
+@media(max-height:650px){
+  .control{
+    width:88px;
+    height:88px;
+  }
+
+  #zoneLabel{
+    top:78px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">PARTY CLASH</div>
+      <div class="gameName">KING ZONE</div>
+    </div>
+    <div class="timer" id="timer">60</div>
+  </div>
+
+  <div id="scores"></div>
+</div>
+
+<div id="zoneLabel">👑 CHASE THE KING ZONE</div>
+
+<div id="controls">
+
+  <div class="joyWrap p1Joy">
+    <div class="joyName">P1</div>
+    <div class="joystick" id="joystick1">
+      <div class="joystick-ring"></div>
+      <div class="joystick-thumb" id="joystickThumb1"></div>
+    </div>
+  </div>
+
+  <div class="joyWrap p2Joy">
+    <div class="joyName">P2</div>
+    <div class="joystick" id="joystick2">
+      <div class="joystick-ring"></div>
+      <div class="joystick-thumb" id="joystickThumb2"></div>
+    </div>
+  </div>
+
+  <div class="joyWrap p3Joy">
+    <div class="joyName">P3</div>
+    <div class="joystick" id="joystick3">
+      <div class="joystick-ring"></div>
+      <div class="joystick-thumb" id="joystickThumb3"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="overlay">
+  <div class="panel">
+    <div class="icon">👑</div>
+    <h1 id="title">KING ZONE</h1>
+    <p id="message">
+      Stay inside the golden zone to earn points.
+      The player with the highest score becomes the King!
+    </p>
+    <button id="start">START CLASH</button>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+const timerEl=document.getElementById("timer");
+const scoresEl=document.getElementById("scores");
+const overlay=document.getElementById("overlay");
+const titleEl=document.getElementById("title");
+const messageEl=document.getElementById("message");
+const startBtn=document.getElementById("start");
+
+const params=new URLSearchParams(location.search);
+const playerCount=Math.max(2,Math.min(4,Number(params.get("players"))||3));
+
+let W=innerWidth;
+let H=innerHeight;
+let running=false;
+let timeLeft=60;
+let last=0;
+let zoneTimer=0;
+let scoreTick=0;
+
+const joysticks=[
+  {active:false,x:0,y:0,pointerId:null},
+  {active:false,x:0,y:0,pointerId:null},
+  {active:false,x:0,y:0,pointerId:null}
+];
+
+const players=[];
+const playerNames=["P1","P2","P3","P4"];
+
+const palette=[
+  "#25d9ff",
+  "#ff4d8d",
+  "#72f06b",
+  "#b987ff"
+];
+
+function resize(){
+  W=innerWidth;
+  H=innerHeight;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  canvas.width=W*dpr;
+  canvas.height=H*dpr;
+  canvas.style.width=W+"px";
+  canvas.style.height=H+"px";
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+addEventListener("resize",resize);
+resize();
+
+function arena(){
+  return {
+    x:30,
+    y:120,
+    w:W-60,
+    h:Math.max(260,H-245)
+  };
+}
+
+let zone={
+  x:W/2,
+  y:H/2,
+  r:45,
+  vx:85,
+  vy:60,
+  angle:0
+};
+
+function makePlayers(){
+  players.length=0;
+
+  for(let i=0;i<playerCount;i++){
+    const a=(Math.PI*2/playerCount)*i;
+    const r=Math.min(W,H)*.22;
+
+    players.push({
+      id:i,
+      name:playerNames[i],
+      x:W/2+Math.cos(a)*r,
+      y:H/2+Math.sin(a)*r,
+      vx:0,
+      vy:0,
+      score:0,
+      radius:16,
+      speed:180,
+      aiAngle:Math.random()*Math.PI*2
+    });
+  }
+}
+
+function newZone(){
+  const a=arena();
+
+  zone.x=a.x+a.w/2;
+  zone.y=a.y+a.h/2;
+
+  const angle=Math.random()*Math.PI*2;
+  const speed=85;
+
+  zone.vx=Math.cos(angle)*speed;
+  zone.vy=Math.sin(angle)*speed;
+  zone.angle=angle;
+}
+
+function moveZone(dt){
+  const a=arena();
+
+  // Small continuous steering changes
+  zone.angle += Math.sin(performance.now()/900)*dt*0.45;
+
+  const targetVX=Math.cos(zone.angle)*105;
+  const targetVY=Math.sin(zone.angle)*105;
+
+  zone.vx += (targetVX-zone.vx)*Math.min(1,dt*1.5);
+  zone.vy += (targetVY-zone.vy)*Math.min(1,dt*1.5);
+
+  zone.x += zone.vx*dt;
+  zone.y += zone.vy*dt;
+
+  const padding=zone.r+8;
+
+  if(zone.x < a.x+padding){
+    zone.x=a.x+padding;
+    zone.vx=Math.abs(zone.vx);
+    zone.angle=Math.atan2(zone.vy,zone.vx);
+  }
+
+  if(zone.x > a.x+a.w-padding){
+    zone.x=a.x+a.w-padding;
+    zone.vx=-Math.abs(zone.vx);
+    zone.angle=Math.atan2(zone.vy,zone.vx);
+  }
+
+  if(zone.y < a.y+padding){
+    zone.y=a.y+padding;
+    zone.vy=Math.abs(zone.vy);
+    zone.angle=Math.atan2(zone.vy,zone.vx);
+  }
+
+  if(zone.y > a.y+a.h-padding){
+    zone.y=a.y+a.h-padding;
+    zone.vy=-Math.abs(zone.vy);
+    zone.angle=Math.atan2(zone.vy,zone.vx);
+  }
+}
+
+function reset(){
+  timeLeft=60;
+  zoneTimer=0;
+  scoreTick=0;
+  timerEl.textContent="60";
+
+  makePlayers();
+  newZone();
+  updateScores();
+}
+
+function distance(a,b){
+  return Math.hypot(a.x-b.x,a.y-b.y);
+}
+
+function updateScores(){
+  scoresEl.innerHTML="";
+
+  players.forEach(p=>{
+    const el=document.createElement("div");
+    el.className="score";
+    el.textContent=p.name+"  "+Math.floor(p.score);
+    el.style.borderColor=palette[p.id]+"55";
+    scoresEl.appendChild(el);
+  });
+}
+
+function moveHuman(p,dt){
+  const joy=joysticks[p.id];
+
+  if(!joy){
+    return;
+  }
+
+  const dx=joy.x;
+  const dy=joy.y;
+  const magnitude=Math.hypot(dx,dy);
+
+  if(magnitude>.05){
+    const nx=dx/magnitude;
+    const ny=dy/magnitude;
+
+    const targetX=nx*p.speed;
+    const targetY=ny*p.speed;
+
+    // Smooth acceleration for continuous movement
+    const acceleration=9;
+
+    p.vx+=(targetX-p.vx)*Math.min(1,acceleration*dt);
+    p.vy+=(targetY-p.vy)*Math.min(1,acceleration*dt);
+  }else{
+    // Smoothly stop when joystick is released
+    p.vx*=Math.max(0,1-8*dt);
+    p.vy*=Math.max(0,1-8*dt);
+  }
+
+  p.x+=p.vx*dt;
+  p.y+=p.vy*dt;
+}
+
+function moveAI(p,dt){
+  const dx=zone.x-p.x;
+  const dy=zone.y-p.y;
+  const d=Math.hypot(dx,dy)||1;
+
+  if(d>zone.r*.65){
+    p.vx+=(dx/d)*p.speed*dt*4;
+    p.vy+=(dy/d)*p.speed*dt*4;
+  }else{
+    p.aiAngle+=dt;
+    p.vx+=Math.cos(p.aiAngle)*p.speed*dt;
+    p.vy+=Math.sin(p.aiAngle)*p.speed*dt;
+  }
+
+  const max=p.speed;
+  const len=Math.hypot(p.vx,p.vy)||1;
+
+  if(len>max){
+    p.vx=p.vx/len*max;
+    p.vy=p.vy/len*max;
+  }
+
+  p.x+=p.vx*dt;
+  p.y+=p.vy*dt;
+}
+
+function update(dt){
+  const a=arena();
+
+  players.forEach((p,i)=>{
+    if(i===0) moveHuman(p,dt);
+    else moveAI(p,dt);
+
+    p.x=Math.max(a.x+p.radius,Math.min(a.x+a.w-p.radius,p.x));
+    p.y=Math.max(a.y+p.radius,Math.min(a.y+a.h-p.radius,p.y));
+
+    if(distance(p,zone)<zone.r){
+      p.score+=dt*10;
+    }
+  });
+
+  // The King Zone now moves continuously.
+  moveZone(dt);
+
+  scoreTick+=dt;
+
+  if(scoreTick>.25){
+    scoreTick=0;
+    updateScores();
+  }
+
+  timeLeft-=dt;
+
+  if(timeLeft<=0){
+    timeLeft=0;
+    endGame();
+  }
+
+  timerEl.textContent=Math.ceil(timeLeft);
+}
+
+function drawBackground(){
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,"#061a29");
+  g.addColorStop(1,"#020c14");
+
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,W,H);
+
+  for(let i=0;i<18;i++){
+    const x=(i*137)%W;
+    const y=(i*83)%H;
+    ctx.fillStyle="rgba(80,220,255,.035)";
+    ctx.beginPath();
+    ctx.arc(x,y,2,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function drawArena(){
+  const a=arena();
+
+  ctx.save();
+
+  ctx.fillStyle="rgba(7,38,53,.72)";
+  ctx.strokeStyle="rgba(65,220,255,.13)";
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+  ctx.roundRect(a.x,a.y,a.w,a.h,28);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawZone(){
+  const pulse=1+Math.sin(performance.now()/220)*.04;
+
+  ctx.save();
+
+  ctx.shadowColor="rgba(255,205,50,.55)";
+  ctx.shadowBlur=30;
+
+  ctx.fillStyle="rgba(255,202,54,.12)";
+  ctx.beginPath();
+  ctx.arc(zone.x,zone.y,zone.r*pulse,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.shadowBlur=0;
+
+  ctx.strokeStyle="rgba(255,225,95,.85)";
+  ctx.lineWidth=4;
+
+  ctx.beginPath();
+  ctx.arc(zone.x,zone.y,zone.r,0,Math.PI*2);
+  ctx.stroke();
+
+  ctx.fillStyle="rgba(255,220,80,.08)";
+  ctx.beginPath();
+  ctx.arc(zone.x,zone.y,zone.r*.72,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.font="26px Arial";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText("♛",zone.x,zone.y);
+
+  ctx.restore();
+}
+
+function drawPlayers(){
+  players.forEach(p=>{
+    ctx.save();
+
+    ctx.shadowColor=palette[p.id];
+    ctx.shadowBlur=18;
+
+    ctx.fillStyle=palette[p.id];
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="rgba(255,255,255,.3)";
+    ctx.beginPath();
+    ctx.arc(p.x-5,p.y-5,5,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+    ctx.font="900 9px Arial";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.fillText(p.name,p.x,p.y);
+
+    ctx.restore();
+  });
+}
+
+function draw(){
+  drawBackground();
+  drawArena();
+  drawZone();
+  drawPlayers();
+}
+
+function loop(t){
+  if(!running){
+    draw();
+    return;
+  }
+
+  const dt=Math.min(.035,(t-last)/1000||0);
+  last=t;
+
+  update(dt);
+  draw();
+
+  requestAnimationFrame(loop);
+}
+
+function endGame(){
+  running=false;
+
+  let winner=players[0];
+
+  players.forEach(p=>{
+    if(p.score>winner.score) winner=p;
+  });
+
+  titleEl.textContent="👑 "+winner.name+" WINS!";
+  messageEl.textContent=
+    winner.name+" controlled the zone and scored "+
+    Math.floor(winner.score)+" points.";
+
+  startBtn.textContent="PLAY AGAIN";
+  overlay.classList.remove("hidden");
+}
+
+function start(){
+  reset();
+  titleEl.textContent="KING ZONE";
+  messageEl.textContent=
+    "Stay inside the golden zone to earn points. The zone moves every few seconds!";
+  startBtn.textContent="START CLASH";
+
+  overlay.classList.add("hidden");
+  running=true;
+  last=performance.now();
+  requestAnimationFrame(loop);
+}
+
+startBtn.addEventListener("click",()=>{
+  if(navigator.vibrate) navigator.vibrate(25);
+  start();
+});
+
+/* ANALOG JOYSTICK */
+function setupJoystick(index){
+  const joy=joysticks[index];
+
+  const el=document.getElementById("joystick"+(index+1));
+  const thumb=document.getElementById("joystickThumb"+(index+1));
+
+  if(!el || !thumb) return;
+
+  function update(e){
+    const rect=el.getBoundingClientRect();
+
+    const cx=rect.left+rect.width/2;
+    const cy=rect.top+rect.height/2;
+
+    let dx=e.clientX-cx;
+    let dy=e.clientY-cy;
+
+    const radius=rect.width*.36;
+    const distance=Math.hypot(dx,dy)||1;
+
+    if(distance>radius){
+      dx=(dx/distance)*radius;
+      dy=(dy/distance)*radius;
+    }
+
+    joy.x=dx/radius;
+    joy.y=dy/radius;
+
+    thumb.style.transform=
+      `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
+  }
+
+  function release(){
+    joy.active=false;
+    joy.pointerId=null;
+    joy.x=0;
+    joy.y=0;
+    thumb.style.transform="translate(-50%,-50%)";
+  }
+
+  el.addEventListener("pointerdown",e=>{
+    if(!running) return;
+
+    joy.active=true;
+    joy.pointerId=e.pointerId;
+
+    if(el.setPointerCapture){
+      el.setPointerCapture(e.pointerId);
+    }
+
+    update(e);
+    e.preventDefault();
+  });
+
+  el.addEventListener("pointermove",e=>{
+    if(!joy.active || e.pointerId!==joy.pointerId) return;
+
+    update(e);
+    e.preventDefault();
+  });
+
+  el.addEventListener("pointerup",e=>{
+    if(e.pointerId===joy.pointerId){
+      release();
+    }
+  });
+
+  el.addEventListener("pointercancel",e=>{
+    if(e.pointerId===joy.pointerId){
+      release();
+    }
+  });
+
+  el.addEventListener("lostpointercapture",()=>{
+    if(joy.active){
+      release();
+    }
+  });
+}
+
+setupJoystick(0);
+setupJoystick(1);
+setupJoystick(2);
+

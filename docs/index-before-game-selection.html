@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#06131f">
+<title>Party Clash</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:#06131f;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+}
+
+body{
+  position:relative;
+  user-select:none;
+}
+
+/* BACKGROUND */
+.ocean{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(24,211,255,.18),transparent 32%),
+    linear-gradient(160deg,#06131f 0%,#062b43 48%,#03131e 100%);
+}
+
+.wave{
+  position:absolute;
+  width:180%;
+  height:55%;
+  left:-40%;
+  border-radius:50%;
+  border:1px solid rgba(65,220,255,.10);
+  animation:drift 12s linear infinite;
+}
+
+.wave:nth-child(1){
+  top:48%;
+}
+.wave:nth-child(2){
+  top:55%;
+  animation-duration:16s;
+}
+.wave:nth-child(3){
+  top:63%;
+  animation-duration:21s;
+}
+
+@keyframes drift{
+  from{transform:translateX(-4%) rotate(-2deg)}
+  to{transform:translateX(4%) rotate(2deg)}
+}
+
+/* DECOR */
+.glow{
+  position:absolute;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:rgba(0,210,255,.10);
+  filter:blur(50px);
+}
+
+.glow.one{top:-100px;left:-90px}
+.glow.two{right:-120px;bottom:-80px;background:rgba(0,255,170,.08)}
+
+/* CONTENT */
+.app{
+  position:relative;
+  z-index:5;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:
+    max(24px,env(safe-area-inset-top))
+    22px
+    max(24px,env(safe-area-inset-bottom));
+}
+
+/* BRAND */
+.brand{
+  text-align:center;
+  margin-bottom:28px;
+}
+
+.logo{
+  width:76px;
+  height:76px;
+  margin:0 auto 14px;
+  border-radius:24px;
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  font-weight:900;
+  letter-spacing:-2px;
+  background:linear-gradient(145deg,#19dcff,#0076ff);
+  box-shadow:
+    0 0 35px rgba(0,194,255,.35),
+    inset 0 1px 1px rgba(255,255,255,.4);
+}
+
+.logo span{
+  transform:skew(-8deg);
+}
+
+h1{
+  margin:0;
+  font-size:clamp(38px,11vw,62px);
+  line-height:.95;
+  letter-spacing:-3px;
+  font-weight:1000;
+}
+
+.subtitle{
+  margin-top:10px;
+  color:#91adbd;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+/* MAIN CARD */
+.panel{
+  width:min(430px,100%);
+  padding:20px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:28px;
+  background:rgba(7,23,34,.72);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(18px);
+}
+
+.label{
+  color:#7995a6;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin:0 0 10px 4px;
+}
+
+/* PLAYER BUTTONS */
+.players{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-bottom:16px;
+}
+
+.player{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:17px;
+  background:#0b202e;
+  color:#a9bec9;
+  font-size:14px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.player:active{
+  transform:scale(.96);
+}
+
+.player.active{
+  color:#fff;
+  border-color:rgba(25,220,255,.65);
+  background:linear-gradient(145deg,#0c4560,#0b2637);
+  box-shadow:
+    0 0 20px rgba(25,220,255,.15),
+    inset 0 0 20px rgba(25,220,255,.06);
+}
+
+.player b{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+
+/* START */
+.start{
+  width:100%;
+  height:66px;
+  border:0;
+  border-radius:20px;
+  color:#00131d;
+  font-size:18px;
+  font-weight:1000;
+  letter-spacing:.5px;
+  background:linear-gradient(135deg,#56efff,#14bfff 55%,#08e8a5);
+  box-shadow:
+    0 12px 30px rgba(0,205,255,.23),
+    inset 0 1px 0 rgba(255,255,255,.65);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.start:active{
+  transform:scale(.97);
+  box-shadow:0 5px 15px rgba(0,205,255,.2);
+}
+
+.start .arrow{
+  display:inline-block;
+  margin-left:8px;
+  transition:.18s;
+}
+
+.start:hover .arrow{
+  transform:translateX(4px);
+}
+
+/* INFO */
+.info{
+  display:flex;
+  justify-content:center;
+  gap:22px;
+  margin-top:17px;
+  color:#708a98;
+  font-size:11px;
+  font-weight:700;
+}
+
+.info span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+/* FOOTER */
+.footer{
+  position:absolute;
+  bottom:max(13px,env(safe-area-inset-bottom));
+  color:#476170;
+  font-size:10px;
+  letter-spacing:1.2px;
+}
+
+/* SMALL SCREENS */
+@media(max-height:650px){
+  .brand{
+    margin-bottom:15px;
+  }
+
+  .logo{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    font-size:27px;
+    margin-bottom:8px;
+  }
+
+  h1{
+    font-size:38px;
+  }
+
+  .panel{
+    padding:15px;
+  }
+
+  .player{
+    min-height:50px;
+  }
+
+  .start{
+    height:57px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="ocean">
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+</div>
+
+<main class="app">
+
+  <section class="brand">
+    <div class="logo"><span>PC</span></div>
+    <h1>PARTY CLASH</h1>
+    <div class="subtitle">Island Panic</div>
+  </section>
+
+  <section class="panel">
+
+    <div class="label">Players</div>
+
+    <div class="players">
+      <button class="player" data-players="2">
+        <b>2</b>PLAYERS
+      </button>
+
+      <button class="player active" data-players="3">
+        <b>3</b>PLAYERS
+      </button>
+
+      <button class="player" data-players="4">
+        <b>4</b>PLAYERS
+      </button>
+    </div>
+
+    <button class="start" id="startBtn">
+      START GAME <span class="arrow">→</span>
+    </button>
+
+    <div class="info">
+      <span>🌊 Island Survival</span>
+      <span>⚡ Local Multiplayer</span>
+    </div>
+
+  </section>
+
+  <div class="footer">SURVIVE • MOVE • CLASH</div>
+
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  const buttons = document.querySelectorAll(".player");
+  const startBtn = document.getElementById("startBtn");
+
+  let selectedPlayers = 3;
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      selectedPlayers = Number(button.dataset.players);
+
+      buttons.forEach(b => b.classList.remove("active"));
+      button.classList.add("active");
+
+      if (navigator.vibrate) navigator.vibrate(15);
+    });
+  });
+
+  startBtn.addEventListener("click", () => {
+    if (navigator.vibrate) navigator.vibrate(25);
+
+    /*
+      Pass player count to the existing Island Panic game.
+      The game itself remains responsible for gameplay.
+    */
+    window.location.href =
+      "island.html?players=" + encodeURIComponent(selectedPlayers);
+  });
+})();
+</script>
+
+</body>
+</html>

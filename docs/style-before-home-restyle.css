@@ -1,0 +1,1099 @@
+/* =========================================================
+   PARTY CLASH
+   PREMIUM HOME PAGE
+   ========================================================= */
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#05060b;
+    color:white;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+.home-screen{
+    position:relative !important;
+    width:100% !important;
+    height:100vh !important;
+    overflow:hidden !important;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(77,91,255,.28) 0%,
+            rgba(77,91,255,.12) 18%,
+            transparent 43%
+        ),
+        radial-gradient(
+            circle at 5% 5%,
+            rgba(0,214,255,.20),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 95% 95%,
+            rgba(151,55,255,.22),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            #03040a 0%,
+            #080b18 48%,
+            #050611 100%
+        ) !important;
+}
+
+/* LIGHT ORBS */
+
+.home-screen::before{
+    content:"";
+    position:absolute !important;
+    width:420px;
+    height:420px;
+    left:50%;
+    top:42%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:
+        radial-gradient(
+            circle,
+            rgba(72,95,255,.22) 0%,
+            rgba(45,64,190,.08) 38%,
+            transparent 70%
+        );
+    filter:blur(8px);
+    pointer-events:none;
+    z-index:0;
+}
+
+.home-screen::after{
+    content:"";
+    position:absolute !important;
+    inset:0;
+    pointer-events:none;
+    opacity:.12;
+    background:
+        linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(255,255,255,.04) 45%,
+            transparent 46%
+        );
+    z-index:1;
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.home-screen .logo{
+    position:relative !important;
+    z-index:20 !important;
+
+    margin:0 !important;
+    padding-top:32px !important;
+
+    text-align:center !important;
+
+    font-size:42px !important;
+    font-weight:1000 !important;
+    letter-spacing:6px !important;
+
+    color:#ffffff !important;
+
+    text-shadow:
+        0 0 8px rgba(255,255,255,.35),
+        0 0 25px rgba(70,105,255,.55),
+        0 0 55px rgba(90,60,255,.28) !important;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.home-screen .home-status{
+    position:relative !important;
+    z-index:20 !important;
+
+    width:max-content !important;
+    margin:13px auto 0 !important;
+    padding:8px 18px !important;
+
+    border:1px solid rgba(97,126,255,.32) !important;
+    border-radius:100px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(45,64,150,.34),
+            rgba(255,255,255,.035)
+        ) !important;
+
+    color:#aebaff !important;
+
+    font-size:10px !important;
+    font-weight:800 !important;
+    letter-spacing:2px !important;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.12) !important;
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+}
+
+/* =========================================================
+   PLAYER BUTTONS
+   KEEP THEIR EXISTING POSITIONS
+   ========================================================= */
+
+.home-screen .home-players{
+    position:absolute !important;
+    inset:0 !important;
+    z-index:15 !important;
+}
+
+/* premium player cards */
+
+.home-screen .corner-player{
+    border:1px solid rgba(117,137,255,.32) !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(46,61,139,.62),
+            rgba(10,14,31,.88)
+        ) !important;
+
+    color:#ffffff !important;
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.60),
+        0 0 35px rgba(62,83,255,.14),
+        inset 0 1px 0 rgba(255,255,255,.14) !important;
+
+    backdrop-filter:blur(22px) !important;
+    -webkit-backdrop-filter:blur(22px) !important;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        border-color .15s ease !important;
+}
+
+/* individual premium glows */
+
+.home-screen .corner-player:nth-child(1){
+    border-color:rgba(0,210,255,.38) !important;
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.60),
+        0 0 40px rgba(0,210,255,.16),
+        inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+.home-screen .corner-player:nth-child(2){
+    border-color:rgba(157,82,255,.40) !important;
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.60),
+        0 0 40px rgba(157,82,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+.home-screen .corner-player:nth-child(3){
+    border-color:rgba(37,224,181,.34) !important;
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.60),
+        0 0 40px rgba(37,224,181,.13),
+        inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+.home-screen .corner-player:nth-child(4){
+    border-color:rgba(255,191,72,.38) !important;
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.60),
+        0 0 40px rgba(255,191,72,.14),
+        inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+/* PRESS */
+
+.home-screen .corner-player:active{
+    transform:scale(.94) !important;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(67,88,190,.82),
+            rgba(12,17,38,.94)
+        ) !important;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.7),
+        0 0 35px rgba(82,106,255,.28) !important;
+}
+
+/* =========================================================
+   CENTER PANEL
+   ========================================================= */
+
+.home-screen .home-mini-games{
+    position:absolute !important;
+    z-index:20 !important;
+
+    left:50% !important;
+    top:50% !important;
+
+    transform:translate(-50%,-50%) !important;
+
+    width:min(72%,390px) !important;
+
+    text-align:center !important;
+}
+
+/* LARGE GLASS BACKPLATE */
+
+.home-screen .home-mini-games::before{
+    content:"" !important;
+
+    position:absolute !important;
+
+    left:-34px !important;
+    right:-34px !important;
+    top:-40px !important;
+    bottom:-40px !important;
+
+    border:1px solid rgba(104,125,255,.22) !important;
+    border-radius:42px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(32,43,101,.48),
+            rgba(7,10,23,.82)
+        ) !important;
+
+    box-shadow:
+        0 35px 100px rgba(0,0,0,.65),
+        0 0 80px rgba(65,79,255,.11),
+        inset 0 1px 0 rgba(255,255,255,.10) !important;
+
+    backdrop-filter:blur(25px) !important;
+    -webkit-backdrop-filter:blur(25px) !important;
+
+    z-index:-1 !important;
+}
+
+/* =========================================================
+   MINI GAMES BUTTON
+   SAME BUTTON — NEW LOOK ONLY
+   ========================================================= */
+
+.home-screen .home-mini-games button{
+    position:relative !important;
+
+    width:100% !important;
+    min-height:76px !important;
+
+    border:1px solid rgba(137,157,255,.55) !important;
+    border-radius:24px !important;
+
+    background:
+        linear-gradient(
+            110deg,
+            #2638b9 0%,
+            #465ce8 38%,
+            #6350e8 70%,
+            #793ee0 100%
+        ) !important;
+
+    color:#ffffff !important;
+
+    font-size:17px !important;
+    font-weight:1000 !important;
+    letter-spacing:3px !important;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.58),
+        0 0 45px rgba(70,87,255,.30),
+        inset 0 2px 0 rgba(255,255,255,.22),
+        inset 0 -2px 0 rgba(0,0,0,.12) !important;
+
+    text-shadow:
+        0 2px 8px rgba(0,0,0,.30) !important;
+
+    overflow:hidden !important;
+}
+
+/* BUTTON SHINE */
+
+.home-screen .home-mini-games button::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-120%;
+    width:80%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.18),
+            transparent
+        );
+
+    transform:skewX(-20deg);
+    animation:partyShine 4s infinite;
+}
+
+@keyframes partyShine{
+    0%,55%{
+        left:-120%;
+    }
+
+    75%,100%{
+        left:140%;
+    }
+}
+
+/* BUTTON PRESS */
+
+.home-screen .home-mini-games button:active{
+    transform:scale(.96) !important;
+
+    background:
+        linear-gradient(
+            110deg,
+            #1d2c9c,
+            #3c4fd0,
+            #563fc4,
+            #6734bd
+        ) !important;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.7),
+        0 0 35px rgba(76,92,255,.32) !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:600px){
+
+    .home-screen .logo{
+        padding-top:25px !important;
+        font-size:31px !important;
+        letter-spacing:4px !important;
+    }
+
+    .home-screen .home-status{
+        margin-top:9px !important;
+        padding:7px 14px !important;
+        font-size:9px !important;
+    }
+
+    .home-screen .home-mini-games{
+        width:min(70%,300px) !important;
+    }
+
+    .home-screen .home-mini-games::before{
+        left:-20px !important;
+        right:-20px !important;
+        top:-25px !important;
+        bottom:-25px !important;
+        border-radius:32px !important;
+    }
+
+    .home-screen .home-mini-games button{
+        min-height:64px !important;
+        border-radius:20px !important;
+        font-size:14px !important;
+        letter-spacing:2px !important;
+    }
+
+    .home-screen .corner-player{
+        box-shadow:
+            0 15px 35px rgba(0,0,0,.65),
+            0 0 28px rgba(70,90,255,.12),
+            inset 0 1px 0 rgba(255,255,255,.13) !important;
+    }
+}
+
+
+/* =========================================================
+   EXISTING GAME SCREENS
+   ========================================================= */
+
+.game-screen{
+    position:relative;
+    width:100%;
+    height:100vh;
+    min-height:100vh;
+    overflow:hidden;
+    background:#080a0d;
+    color:#fff;
+}
+
+.tap-zone,
+.reaction-zone{
+    border:1px solid rgba(255,255,255,.08);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.025)
+        );
+    color:#fff;
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+}
+
+.tap-zone.active,
+.reaction-zone.active{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.13),
+            rgba(255,255,255,.045)
+        );
+}
+
+.tap-zone.winner,
+.reaction-zone.winner{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(45,190,105,.38),
+            rgba(20,100,60,.18)
+        );
+    border-color:rgba(70,220,125,.35);
+    box-shadow:
+        0 0 35px rgba(45,190,105,.18),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+
+/* =========================================================
+   REACTION RACE — PRESERVED
+   ========================================================= */
+
+.game-screen:has(.reaction-zone) .players-area{
+    position:relative;
+    display:block;
+    padding:0;
+    min-height:0;
+    flex:1;
+}
+
+.game-screen:has(.reaction-zone) .reaction-zone{
+    position:absolute;
+    width:125px;
+    height:125px;
+    min-height:0;
+    margin:0;
+}
+
+/* 2 PLAYERS */
+
+.game-screen:has(.players-2) .reaction-zone:nth-child(1){
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.game-screen:has(.players-2) .reaction-zone:nth-child(2){
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+/* 3 PLAYERS */
+
+.game-screen:has(.players-3) .reaction-zone:nth-child(1){
+    left:18px;
+    top:30px;
+}
+
+.game-screen:has(.players-3) .reaction-zone:nth-child(2){
+    right:18px;
+    top:30px;
+}
+
+.game-screen:has(.players-3) .reaction-zone:nth-child(3){
+    left:18px;
+    bottom:30px;
+}
+
+/* 4 PLAYERS */
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(1){
+    left:18px;
+    top:25px;
+}
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(2){
+    right:18px;
+    top:25px;
+}
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(3){
+    left:18px;
+    bottom:25px;
+}
+
+.game-screen:has(.players-4) .reaction-zone:nth-child(4){
+    right:18px;
+    bottom:25px;
+}
+
+/* FIVE CENTER LIGHTS */
+
+.game-screen:has(.reaction-zone) .reaction-lights{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:50;
+}
+
+.reaction-dot.on{
+    background:#ff3030;
+    box-shadow:
+        0 0 12px rgba(255,48,48,.85),
+        0 0 28px rgba(255,48,48,.35);
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .game-screen:has(.reaction-zone) .reaction-zone{
+        width:105px;
+        height:105px;
+        border-radius:25px;
+    }
+
+    .game-screen:has(.players-2) .reaction-zone:nth-child(1){
+        left:9px;
+    }
+
+    .game-screen:has(.players-2) .reaction-zone:nth-child(2){
+        right:9px;
+    }
+
+    .game-screen:has(.players-3) .reaction-zone:nth-child(1){
+        left:9px;
+        top:20px;
+    }
+
+    .game-screen:has(.players-3) .reaction-zone:nth-child(2){
+        right:9px;
+        top:20px;
+    }
+
+    .game-screen:has(.players-3) .reaction-zone:nth-child(3){
+        left:9px;
+        bottom:20px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(1){
+        left:9px;
+        top:15px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(2){
+        right:9px;
+        top:15px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(3){
+        left:9px;
+        bottom:15px;
+    }
+
+    .game-screen:has(.players-4) .reaction-zone:nth-child(4){
+        right:9px;
+        bottom:15px;
+    }
+}
+
+
+/* =====================================================
+   PARTY CLASH — HOME PAGE ONLY
+   MODERN MOBILE GAME STYLE
+===================================================== */
+
+.home-screen{
+    background:#0b0d14 !important;
+}
+
+/* Soft background atmosphere */
+.home-screen::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(67,87,255,.14),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(0,200,255,.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(180,70,255,.08),
+            transparent 28%
+        );
+}
+
+/* Keep existing home structure */
+.home-screen .logo{
+    position:relative;
+    z-index:10;
+
+    color:#ffffff;
+
+    text-shadow:
+        0 3px 18px rgba(0,0,0,.5);
+
+    letter-spacing:4px;
+}
+
+/* Status pill */
+.home-screen .home-status{
+    position:relative;
+    z-index:10;
+
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.09);
+
+    color:#aeb4c4;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+/* =====================================================
+   PLAYER CARDS
+===================================================== */
+
+.home-screen .corner-player{
+
+    border:1px solid rgba(255,255,255,.10);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.11),
+            rgba(255,255,255,.035)
+        );
+
+    color:#ffffff;
+
+    border-radius:28px;
+
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+/* Player accent colors */
+
+.home-screen .corner-player:nth-child(1){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(0,190,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:nth-child(2){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(150,80,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:nth-child(3){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(30,210,160,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:nth-child(4){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(255,190,60,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:active{
+    transform:scale(.96);
+
+    background:
+        rgba(255,255,255,.12);
+}
+
+/* =====================================================
+   CENTER MENU
+===================================================== */
+
+.home-screen .home-mini-games{
+    position:relative;
+    z-index:10;
+}
+
+/* Clean glass backing */
+
+.home-screen .home-mini-games::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:-22px;
+    right:-22px;
+    top:-22px;
+    bottom:-22px;
+
+    border-radius:30px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.42);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    z-index:-1;
+}
+
+/* Main button */
+
+.home-screen .home-mini-games button{
+
+    border:0;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5268ff,
+            #7657e8
+        );
+
+    color:white;
+
+    box-shadow:
+        0 12px 30px rgba(70,80,220,.25);
+
+    font-weight:900;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
+}
+
+.home-screen .home-mini-games button:active{
+
+    transform:scale(.97);
+
+    filter:brightness(.9);
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:600px){
+
+    .home-screen .logo{
+        font-size:30px;
+        letter-spacing:3px;
+    }
+
+    .home-screen .corner-player{
+        border-radius:24px;
+    }
+
+    .home-screen .home-mini-games::before{
+        left:-15px;
+        right:-15px;
+        top:-15px;
+        bottom:-15px;
+
+        border-radius:25px;
+    }
+
+    .home-screen .home-mini-games button{
+        border-radius:17px;
+    }
+}
+
+
+/* =====================================================
+   PARTY CLASH — HOME PAGE ONLY
+   MODERN MOBILE GAME STYLE
+===================================================== */
+
+.home-screen{
+    background:#0b0d14 !important;
+}
+
+/* Soft background atmosphere */
+.home-screen::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(67,87,255,.14),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(0,200,255,.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(180,70,255,.08),
+            transparent 28%
+        );
+}
+
+/* Keep existing home structure */
+.home-screen .logo{
+    position:relative;
+    z-index:10;
+
+    color:#ffffff;
+
+    text-shadow:
+        0 3px 18px rgba(0,0,0,.5);
+
+    letter-spacing:4px;
+}
+
+/* Status pill */
+.home-screen .home-status{
+    position:relative;
+    z-index:10;
+
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.09);
+
+    color:#aeb4c4;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+/* =====================================================
+   PLAYER CARDS
+===================================================== */
+
+.home-screen .corner-player{
+
+    border:1px solid rgba(255,255,255,.10);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.11),
+            rgba(255,255,255,.035)
+        );
+
+    color:#ffffff;
+
+    border-radius:28px;
+
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+/* Player accent colors */
+
+.home-screen .corner-player:nth-child(1){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(0,190,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:nth-child(2){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(150,80,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:nth-child(3){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(30,210,160,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:nth-child(4){
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.4),
+        0 0 22px rgba(255,190,60,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.home-screen .corner-player:active{
+    transform:scale(.96);
+
+    background:
+        rgba(255,255,255,.12);
+}
+
+/* =====================================================
+   CENTER MENU
+===================================================== */
+
+.home-screen .home-mini-games{
+    position:relative;
+    z-index:10;
+}
+
+/* Clean glass backing */
+
+.home-screen .home-mini-games::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:-22px;
+    right:-22px;
+    top:-22px;
+    bottom:-22px;
+
+    border-radius:30px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.42);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    z-index:-1;
+}
+
+/* Main button */
+
+.home-screen .home-mini-games button{
+
+    border:0;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5268ff,
+            #7657e8
+        );
+
+    color:white;
+
+    box-shadow:
+        0 12px 30px rgba(70,80,220,.25);
+
+    font-weight:900;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
+}
+
+.home-screen .home-mini-games button:active{
+
+    transform:scale(.97);
+
+    filter:brightness(.9);
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:600px){
+
+    .home-screen .logo{
+        font-size:30px;
+        letter-spacing:3px;
+    }
+
+    .home-screen .corner-player{
+        border-radius:24px;
+    }
+
+    .home-screen .home-mini-games::before{
+        left:-15px;
+        right:-15px;
+        top:-15px;
+        bottom:-15px;
+
+        border-radius:25px;
+    }
+
+    .home-screen .home-mini-games button{
+        border-radius:17px;
+    }
+}
+

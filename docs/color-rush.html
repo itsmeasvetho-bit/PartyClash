@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Party Clash • Color Rush</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{
+ margin:0;width:100%;height:100%;overflow:hidden;
+ background:#070914;color:white;
+ font-family:Arial,sans-serif;
+ touch-action:none
+}
+body{position:fixed;inset:0}
+#game{position:fixed;inset:0;width:100%;height:100%}
+
+#hud{
+ position:fixed;top:0;left:0;right:0;z-index:5;
+ padding:max(12px,env(safe-area-inset-top)) 14px 10px;
+ display:flex;justify-content:space-between;align-items:flex-start;
+ pointer-events:none
+}
+.logo{
+ font-weight:1000;letter-spacing:2px;font-size:13px
+}
+.logo span{
+ display:block;margin-top:3px;font-size:8px;
+ letter-spacing:1.7px;opacity:.5
+}
+#timer{
+ min-width:66px;padding:9px 13px;border-radius:16px;
+ background:#101525dd;border:1px solid #ffffff20;
+ text-align:center;font-size:23px;font-weight:1000;
+ box-shadow:0 8px 25px #0008
+}
+#timer.danger{animation:pulse .35s infinite alternate}
+@keyframes pulse{to{transform:scale(1.08)}}
+
+#scores{
+ position:fixed;top:76px;left:50%;
+ transform:translateX(-50%);
+ display:flex;gap:6px;z-index:5;pointer-events:none
+}
+.score{
+ min-width:58px;padding:7px 9px;border-radius:12px;
+ background:#101525dd;border:1px solid #ffffff16;
+ text-align:center;font-size:10px;font-weight:900
+}
+.score b{display:block;font-size:14px;margin-top:2px}
+
+#target{
+ position:fixed;z-index:8;top:50%;left:50%;
+ transform:translate(-50%,-50%);
+ text-align:center;pointer-events:none
+}
+#targetLabel{
+ font-size:10px;letter-spacing:3px;font-weight:1000;
+ opacity:.65;margin-bottom:12px
+}
+#targetColor{
+ width:125px;height:125px;border-radius:32px;
+ border:5px solid rgba(255,255,255,.8);
+ box-shadow:0 0 45px currentColor,0 18px 45px #0008;
+ transition:transform .15s
+}
+#targetColor.pop{transform:scale(1.15)}
+
+#countdown{
+ position:fixed;inset:0;z-index:20;
+ display:flex;align-items:center;justify-content:center;
+ font-size:min(30vw,170px);font-weight:1000;
+ text-shadow:0 0 35px #fff
+}
+
+#message{
+ position:fixed;z-index:15;top:30%;
+ left:50%;transform:translate(-50%,-50%) scale(.7);
+ opacity:0;padding:12px 20px;border-radius:15px;
+ background:#0c1220eF;border:1px solid #ffffff25;
+ font-size:17px;font-weight:1000;
+ transition:.18s
+}
+#message.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+#buttons{
+ position:fixed;z-index:10;left:0;right:0;
+ bottom:max(18px,env(safe-area-inset-bottom));
+ display:flex;justify-content:center;gap:9px;
+ padding:0 12px
+}
+.colorBtn{
+ width:74px;height:74px;border-radius:22px;
+ border:3px solid #ffffff70;
+ box-shadow:0 10px 25px #0009,inset 0 2px #ffffff55;
+ font-size:0
+}
+.colorBtn:active{transform:scale(.92)}
+.red{background:#ff3858;box-shadow:0 0 25px #ff385877}
+.blue{background:#279cff;box-shadow:0 0 25px #279cff77}
+.green{background:#42df72;box-shadow:0 0 25px #42df7277}
+.yellow{background:#ffd83d;box-shadow:0 0 25px #ffd83d77}
+
+#result{
+ position:fixed;inset:0;z-index:30;display:none;
+ align-items:center;justify-content:center;
+ padding:20px;background:#02050dcc;
+ backdrop-filter:blur(12px)
+}
+.card{
+ width:min(390px,92vw);padding:28px 21px 22px;
+ border-radius:28px;text-align:center;
+ background:linear-gradient(145deg,#172033f5,#080d18f8);
+ border:1px solid #ffffff18;
+ box-shadow:0 30px 80px #000c
+}
+.card .icon{font-size:46px}
+.card h1{margin:7px 0 5px;font-size:30px}
+.card p{margin:0 0 20px;color:#8996aa;font-size:12px}
+#finalScores{
+ display:grid;gap:7px;margin-bottom:18px
+}
+.final{
+ display:flex;justify-content:space-between;
+ padding:11px 13px;border-radius:13px;
+ background:#ffffff08;border:1px solid #ffffff0c;
+ font-size:12px;font-weight:900
+}
+button{
+ width:100%;padding:14px;border:0;border-radius:15px;
+ background:white;color:#07101b;font-weight:1000
+}
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+ <div class="logo">PARTY CLASH<span>COLOR RUSH</span></div>
+ <div id="timer">10</div>
+</div>
+
+<div id="scores"></div>
+
+<div id="target">
+ <div id="targetLabel">RUN TO</div>
+ <div id="targetColor"></div>
+</div>
+
+<div id="countdown">3</div>
+<div id="message"></div>
+
+<div id="buttons">
+ <button class="colorBtn red" data-color="red"></button>
+ <button class="colorBtn blue" data-color="blue"></button>
+ <button class="colorBtn green" data-color="green"></button>
+ <button class="colorBtn yellow" data-color="yellow"></button>
+</div>
+
+<div id="result">
+ <div class="card">
+  <div class="icon">🏆</div>
+  <h1 id="winner">P1 WINS!</h1>
+  <p>COLOR RUSH COMPLETE</p>
+  <div id="finalScores"></div>
+  <button onclick="location.href='index.html'">BACK TO PARTY CLASH</button>
+ </div>
+</div>
+
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+let W=innerWidth,H=innerHeight,D=devicePixelRatio||1;
+function resize(){
+ W=innerWidth;H=innerHeight;D=Math.min(devicePixelRatio||1,2);
+ canvas.width=W*D;canvas.height=H*D;
+ canvas.style.width=W+"px";canvas.style.height=H+"px";
+ ctx.setTransform(D,0,0,D,0,0);
+}
+addEventListener("resize",resize);resize();
+
+const count=Math.max(2,Math.min(4,
+ parseInt(new URLSearchParams(location.search).get("players")||"3")
+));
+
+const colors={
+ red:"#ff3858",
+ blue:"#279cff",
+ green:"#42df72",
+ yellow:"#ffd83d"
+};
+const names=Object.keys(colors);
+
+let players=[];
+let target="";
+let scores=[];
+let round=0;
+let time=10;
+let running=false;
+let finished=false;
+let last=performance.now();
+let particles=[];
+
+for(let i=0;i<count;i++){
+ players.push({
+  id:i,
+  x:W/2+(Math.random()-.5)*120,
+  y:H*.65+(Math.random()-.5)*70,
+  color:names[i],
+  alive:true,
+  pulse:Math.random()*10
+ });
+ scores.push(0);
+}
+
+function makeParticles(){
+ particles=[];
+ for(let i=0;i<70;i++){
+  particles.push({
+   x:Math.random()*W,y:Math.random()*H,
+   r:Math.random()*2+1,
+   a:Math.random()
+  });
+ }
+}
+makeParticles();
+
+function chooseTarget(){
+ target=names[Math.floor(Math.random()*names.length)];
+ const box=document.getElementById("targetColor");
+ box.style.background=colors[target];
+ box.style.color=colors[target];
+ box.classList.remove("pop");
+ void box.offsetWidth;
+ box.classList.add("pop");
+}
+
+function updateScores(){
+ document.getElementById("scores").innerHTML=
+ players.map((p,i)=>
+ `<div class="score">P${i+1}<b>${scores[i]}</b></div>`
+ ).join("");
+}
+
+function message(t){
+ const m=document.getElementById("message");
+ m.textContent=t;
+ m.classList.add("show");
+ setTimeout(()=>m.classList.remove("show"),650);
+}
+
+function pressColor(c){
+ if(!running||finished)return;
+
+ players.forEach((p,i)=>{
+  if(p.color===c){
+   scores[i]++;
+   p.pulse=12;
+  }
+ });
+
+ updateScores();
+ message(c===target?"CORRECT!":"TOO LATE!");
+
+ if(c===target){
+  round++;
+  time=10;
+  chooseTarget();
+ }
+}
+
+document.querySelectorAll(".colorBtn").forEach(b=>{
+ b.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  pressColor(b.dataset.color);
+ });
+});
+
+function draw(){
+ ctx.clearRect(0,0,W,H);
+
+ const g=ctx.createLinearGradient(0,0,0,H);
+ g.addColorStop(0,"#080d22");
+ g.addColorStop(.55,"#10102a");
+ g.addColorStop(1,"#040713");
+ ctx.fillStyle=g;
+ ctx.fillRect(0,0,W,H);
+
+ ctx.save();
+ ctx.globalAlpha=.08;
+
+ for(let i=0;i<8;i++){
+  ctx.beginPath();
+  ctx.arc(
+   W/2,H*.5,
+   90+i*75+Math.sin(Date.now()/1000+i)*8,
+   0,Math.PI*2
+  );
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=1;
+  ctx.stroke();
+ }
+ ctx.restore();
+
+ players.forEach((p,i)=>{
+  const angle=(i/count)*Math.PI*2-Math.PI/2;
+  const radius=Math.min(W*.32,145);
+  const tx=W/2+Math.cos(angle)*radius;
+  const ty=H*.67+Math.sin(angle)*radius*.35;
+
+  p.x+=(tx-p.x)*.035;
+  p.y+=(ty-p.y)*.035;
+
+  if(p.pulse>0)p.pulse-=.35;
+
+  ctx.save();
+  ctx.shadowColor=colors[p.color];
+  ctx.shadowBlur=25+p.pulse*2;
+
+  ctx.fillStyle=colors[p.color];
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,22+p.pulse*.3,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.shadowBlur=0;
+  ctx.fillStyle="#08101d";
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,13,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#fff";
+  ctx.font="900 9px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("P"+(i+1),p.x,p.y+3);
+  ctx.restore();
+ });
+
+ particles.forEach(p=>{
+  p.y-=.12;
+  if(p.y<0)p.y=H;
+  ctx.globalAlpha=.15+p.a*.3;
+  ctx.fillStyle="#fff";
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+  ctx.fill();
+ });
+}
+
+function update(dt){
+ if(!running||finished)return;
+
+ time-=dt/1000;
+
+ document.getElementById("timer").textContent=
+  Math.max(0,Math.ceil(time));
+
+ if(time<=3)
+  document.getElementById("timer").classList.add("danger");
+
+ if(time<=0){
+  time=10;
+  chooseTarget();
+
+  if(round>=8)endGame();
+ }
+}
+
+function endGame(){
+ if(finished)return;
+ finished=true;
+ running=false;
+
+ let best=Math.max(...scores);
+ let winner=scores.indexOf(best);
+
+ document.getElementById("winner").textContent=
+  "P"+(winner+1)+" WINS!";
+
+ document.getElementById("finalScores").innerHTML=
+  scores.map((s,i)=>
+   `<div class="final"><span>P${i+1}</span><b>${s} POINTS</b></div>`
+  ).join("");
+
+ document.getElementById("result").style.display="flex";
+}
+
+function start(){
+ let n=3;
+ const cd=document.getElementById("countdown");
+ cd.textContent=n;
+
+ const t=setInterval(()=>{
+  n--;
+  if(n>0)cd.textContent=n;
+  else{
+   clearInterval(t);
+   cd.textContent="GO!";
+   setTimeout(()=>{
+    cd.style.display="none";
+    running=true;
+    chooseTarget();
+   },450);
+  }
+ },750);
+}
+
+updateScores();
+start();
+
+function loop(now){
+ const dt=Math.min(40,now-last);
+ last=now;
+ update(dt);
+ draw();
+ requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
+</script>
+</body>
+</html>
